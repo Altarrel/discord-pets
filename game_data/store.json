@@ -1,0 +1,15 @@
+{
+    "Kibble": {
+        "restore_type": "saturation",
+        "restore_amount": 1,
+        "price": 50,
+        "amount": 1
+    },
+
+    "Flea Treatment": {
+        "restore_type": "cleanliness",
+        "restore_amount": 1,
+        "price": 50,
+        "amount": 1
+    }
+}

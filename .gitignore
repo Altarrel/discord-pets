@@ -1,2 +1,7 @@
 __pycache__/
 config.py
+Include/
+Lib/
+Scripts/
+pyenv.cfg
+pip-selfcheck.json
