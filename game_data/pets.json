@@ -1,11 +1,11 @@
 {
     "Dev": {
-        "test": {
+        "Test": {
             "image": "https://cdn.discordapp.com/avatars/174243954487853056/54d2c1a11b27370585485a8b17d3bd1c.png?size=1024",
             "nickname": "Test",
             "name": "Test",
             "age": 0,
-            "expansion": "dev",
+            "expansion": "Dev",
             "saturation": 4,
             "cleanliness": 4,
             "health": 4

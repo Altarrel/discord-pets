@@ -132,11 +132,13 @@ class Pets:
 
         inventory = json.loads(profile["inventory"])
         msg = f"```\nInventory of {ctx.author}\n\n"
-        if not a:
-            for item in inventory:
-                msg += f"-{item}: {inventory[item]}\n"
-        else:
-            msg += "Empty inventory"
+        original_msg = copy.copy(msg)
+        for item in inventory:
+            if inventory[item]["amount"] > 0:
+                msg += f"-{item}: {inventory[item]['amount']}\n"
+        if msg == original_msg:
+            await ctx.send("Your inventory is empty.")
+            return
         msg += "```"
         await ctx.send(msg)
 
@@ -161,7 +163,7 @@ class Pets:
         """
         embed = discord.Embed()
         for item in store:
-            if item["amount"] > 0:
+            if store[item]["amount"] > 0:
                 embed.add_field(name=item, value=f"Price: {store[item]['price']}")
         await ctx.send(embed=embed)
 
@@ -175,7 +177,11 @@ class Pets:
             await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
             return
 
-        store_item = fuzz_process.extractOne(item, store.keys(), score_cutoff=70)[0]
+        extract_item = fuzz_process.extractOne(item, store.keys(), score_cutoff=70)
+        try:
+            store_item = extract_item[0]
+        except TypeError:
+            store_item = None
 
         if not store_item:
             await ctx.send("That item isn't in the store.")
@@ -187,19 +193,20 @@ class Pets:
         if price > balance:
             await ctx.send(f"You don't have enough coins to buy {store_item}.")
             return
-
         else:
             balance -= price
             inventory = json.loads(profile["inventory"])
-            if inventory[store_item]:
+            if store_item in inventory:
                 inventory[store_item]["amount"] += store[store_item]["amount"]
             else:
                 inventory[store_item] = store[store_item]
             connection = await self.bot.db.acquire()
             async with connection.transaction():
                 query = """UPDATE users SET currency = $1, inventory = $2 WHERE id = $3"""
-                await connection.execute(query, balance, inventory, ctx.author.id)
+                await connection.execute(query, balance, json.dumps(inventory), ctx.author.id)
             await self.bot.db.release(connection)
+
+            await ctx.send(f"You bought {store[store_item]['amount']} {store_item} for {price} coins.")
 
     @commands.command()
     async def feed(self, ctx, item: str):
@@ -213,10 +220,16 @@ class Pets:
 
         pet = json.loads(profile["pet"])
         inventory = json.loads(profile["inventory"])
-        fuzzy_item = fuzz_process.extractOne(item, inventory.keys(), score_cutoff=70)[0]
+        extract_item = fuzz_process.extractOne(item, inventory.keys(), score_cutoff=70)
+        try:
+            fuzzy_item_name = extract_item[0]
+            fuzzy_item = inventory[fuzzy_item_name]
+        except TypeError:
+            fuzzy_item_name = None
+            fuzzy_item = None
         current_time = int(time.time() / 60)
 
-        if not fuzzy_item or inventory[fuzyy_item]["amount"] <= 0:
+        if not fuzzy_item or fuzzy_item["amount"] <= 0:
             await ctx.send("You don't have that item in your inventory.")
             return
 
@@ -234,18 +247,77 @@ class Pets:
                 "cleaned": current_time,
                 "play": current_time
             }
+        else:
+            self.bot.last_interactions[ctx.author.id]["cleaned"] = current_time
 
         decayed_stats["saturation"] += fuzzy_item["restore_amount"]
 
         if decayed_stats["saturation"] > 4:
             decayed_stats["saturation"] = 4
 
-        inventory[fuzzy_item]["amount"] -= 1
+        inventory[fuzzy_item_name]["amount"] -= 1
 
         connection = await self.bot.db.acquire()
         async with connection.transaction():
             query = """UPDATE users SET inventory = $1, pet = $2 WHERE id = $3"""
-            await connection.execute(query, inventory, decayed_stats, ctx.author.id)
+            await connection.execute(query, json.dumps(inventory), json.dumps(decayed_stats), ctx.author.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{pet['nickname']}'s saturation was restored.")
+        await ctx.send(f"{pet['nickname']}'s saturation was increased by {fuzzy_item['restore_amount']}.")
+
+    @commands.command()
+    async def clean(self, ctx, item: str):
+        """
+        Feed your pet
+        """
+        profile = await self.get_profile(ctx.author.id)
+        if not profile:
+            await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            return
+
+        pet = json.loads(profile["pet"])
+        inventory = json.loads(profile["inventory"])
+        extract_item = fuzz_process.extractOne(item, inventory.keys(), score_cutoff=70)
+        try:
+            fuzzy_item_name = extract_item[0]
+            fuzzy_item = inventory[fuzzy_item_name]
+        except TypeError:
+            fuzzy_item_name = None
+            fuzzy_item = None
+        current_time = int(time.time() / 60)
+
+        if not fuzzy_item or fuzzy_item["amount"] <= 0:
+            await ctx.send("You don't have that item in your inventory.")
+            return
+
+        if fuzzy_item["restore_type"] != "cleanliness":
+            await ctx.send("That isn't a cleaning item.")
+            return
+
+        try:
+            last_interactions = self.bot.last_interactions[ctx.author.id]
+            decayed_stats = utils.decay_stats(pet, current_time, last_interactions)
+        except KeyError:
+            decayed_stats = pet
+            self.bot.last_interactions[ctx.author.id] = {
+                "fed": current_time,
+                "cleaned": current_time,
+                "play": current_time
+            }
+        else:
+            self.bot.last_interactions[ctx.author.id]["cleaned"] = current_time
+
+        decayed_stats["cleanliness"] += fuzzy_item["restore_amount"]
+
+        if decayed_stats["cleanliness"] > 4:
+            decayed_stats["cleanliness"] = 4
+
+        inventory[fuzzy_item_name]["amount"] -= 1
+
+        connection = await self.bot.db.acquire()
+        async with connection.transaction():
+            query = """UPDATE users SET inventory = $1, pet = $2 WHERE id = $3"""
+            await connection.execute(query, json.dumps(inventory), json.dumps(decayed_stats), ctx.author.id)
+        await self.bot.db.release(connection)
+
+        await ctx.send(f"{pet['nickname']}'s cleanliness was increased by {fuzzy_item['restore_amount']}.")

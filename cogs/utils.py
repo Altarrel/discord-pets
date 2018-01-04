@@ -62,10 +62,10 @@ def create_stats_embed(author_name, profile):
     pet = json.loads(profile["pet"])
     graveyard = json.loads(profile["graveyard"])
 
-    age = convert("age", pet["age"]) + f" {int(pet['age'])}/4"
-    saturation = convert("saturation", pet["saturation"]) + f" {int(pet['saturation'])}/4"
-    cleanliness = convert("cleanliness", pet["cleanliness"]) + f" {int(pet['cleanliness'])}/4"
-    health = convert("health", pet["health"]) + f" {int(pet['health'])}/4"
+    age = convert("age", pet["age"]) + f" {pet['age']}/4.0"
+    saturation = convert("saturation", pet["saturation"]) + f" {pet['saturation']}/4.0"
+    cleanliness = convert("cleanliness", pet["cleanliness"]) + f" {pet['cleanliness']}/4.0"
+    health = convert("health", pet["health"]) + f" {pet['health']}/4.0"
     currency = profile["currency"]
 
     embed = discord.Embed(title=f"Pet and Stats for {author_name}")

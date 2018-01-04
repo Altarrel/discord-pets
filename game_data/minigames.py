@@ -17,6 +17,7 @@ async def coinflip(bot, ctx):
         use_msg = True
 
     if use_msg:
+        await msg.edit(content="Guess whether the coin will land on heads or tails.\n\n**I or you don't have add_reactions permissions, say h/heads or t/tails.**")
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel and m.content.lower() in ("h", "heads", "t", "tails")
         try:
@@ -27,7 +28,7 @@ async def coinflip(bot, ctx):
 
         answer = random.choice((("h", "heads"), ("t", "tails")))
         if guess.content.lower() in answer:
-            winnings = random.randint(5, 10)
+            winnings = random.randint(50, 100)
             await ctx.send(f"\U0001f389 You won {winnings} pet coins! The coin landed on {answer[1]}. \U0001f389")
         else:
             await ctx.send(f"You didn't guess correctly! The coin landed on {answer[1]}. \U0001f626")
@@ -42,10 +43,10 @@ async def coinflip(bot, ctx):
 
         answer = random.choice(("\U0001f1ed", "\U0001f1f9"))
         if str(guess[0].emoji) == answer:
-            winnings = random.randint(5, 10)
-            await ctx.send(f"\U0001f389 You won {winnings} pet coins! The coin landed on {answer[1]}. \U0001f389")
+            winnings = random.randint(50, 100)
+            await ctx.send(f"\U0001f389 You won {winnings} pet coins! The coin landed on {answer}. \U0001f389")
         else:
-            await ctx.send(f"You didn't guess correctly! The coin landed on {answer[1]}. \U0001f626")
+            await ctx.send(f"You didn't guess correctly! The coin landed on {answer}. \U0001f626")
 
     if winnings:
         connection = await bot.db.acquire()
