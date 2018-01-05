@@ -4,33 +4,33 @@
             "image": "https://imgur.com/aU9oCQZ.jpg",
             "nickname": "Bit",
             "name": "Bit",
-            "age": 0,
+            "age": 0.0,
             "expansion": "Altarrel's Animals",
-            "saturation": 4,
-            "cleanliness": 4,
-            "health": 4
+            "saturation": 4.0,
+            "cleanliness": 4.0,
+            "health": 4.0
         },
 
         "Elvis": {
             "image": "https://imgur.com/0Q1FRNC.jpg",
             "nickname": "Elvis",
             "name": "Elvis",
-            "age": 0,
+            "age": 0.0,
             "expansion": "Altarrel's Animals",
-            "saturation": 4,
-            "cleanliness": 4,
-            "health": 4
+            "saturation": 4.0,
+            "cleanliness": 4.0,
+            "health": 4.0
         },
 
         "Lilo": {
             "image": "https://imgur.com/KrX8Wr6.jpg",
             "nickname": "Lilo",
             "name": "Lilo",
-            "age": 0,
+            "age": 0.0,
             "expansion": "Altarrel's Animals",
-            "saturation": 4,
-            "cleanliness": 4,
-            "health": 4
+            "saturation": 4.0,
+            "cleanliness": 4.0,
+            "health": 4.0
         }
     }
 }
