@@ -9,8 +9,7 @@ import config
 
 async def run():
     description = "A bot written in Python by Altarrel"
-    pg = {"user": "postgres", "password": "discord-pets", "database": "postgres", "host": "127.0.0.1"}
-    db = await asyncpg.create_pool(**pg)
+    db = await asyncpg.create_pool(**config.credentials)
     await db.execute("CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, currency int, inventory text, pet text, graveyard text);")
 
     bot = DiscordPets(description=description, db=db)
