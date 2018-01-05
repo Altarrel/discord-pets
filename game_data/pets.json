@@ -1,11 +1,33 @@
 {
-    "Dev": {
-        "Test": {
-            "image": "https://cdn.discordapp.com/avatars/174243954487853056/54d2c1a11b27370585485a8b17d3bd1c.png?size=1024",
-            "nickname": "Test",
-            "name": "Test",
+    "Altarrel's Animals": {
+        "Bit": {
+            "image": "https://imgur.com/aU9oCQZ",
+            "nickname": "Bit",
+            "name": "Elvis",
             "age": 0,
-            "expansion": "Dev",
+            "expansion": "Altarrel's Animals",
+            "saturation": 4,
+            "cleanliness": 4,
+            "health": 4
+        },
+
+        "Elvis": {
+            "image": "https://imgur.com/0Q1FRNC",
+            "nickname": "Elvis",
+            "name": "Elvis",
+            "age": 0,
+            "expansion": "Altarrel's Animals",
+            "saturation": 4,
+            "cleanliness": 4,
+            "health": 4
+        },
+
+        "Lilo": {
+            "image": "https://imgur.com/KrX8Wr6",
+            "nickname": "Lilo",
+            "name": "Lilo",
+            "age": 0,
+            "expansion": "Altarrel's Animals",
             "saturation": 4,
             "cleanliness": 4,
             "health": 4
