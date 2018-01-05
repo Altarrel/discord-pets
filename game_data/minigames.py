@@ -28,7 +28,7 @@ async def coinflip(bot, ctx):
 
         answer = random.choice((("h", "heads"), ("t", "tails")))
         if guess.content.lower() in answer:
-            winnings = random.randint(50, 100)
+            winnings = random.randint(10, 15)
             await ctx.send(f"\U0001f389 You won {winnings} pet coins! The coin landed on {answer[1]}. \U0001f389")
         else:
             await ctx.send(f"You didn't guess correctly! The coin landed on {answer[1]}. \U0001f626")
@@ -41,12 +41,12 @@ async def coinflip(bot, ctx):
             await ctx.send("You took too long to respond, you lose.")
             return
 
-        answer = random.choice(("\U0001f1ed", "\U0001f1f9"))
-        if str(guess[0].emoji) == answer:
-            winnings = random.randint(50, 100)
-            await ctx.send(f"\U0001f389 You won {winnings} pet coins! The coin landed on {answer}. \U0001f389")
+        answer = random.choice((("\U0001f1ed", "heads"), ("\U0001f1f9", "tails")))
+        if str(guess[0].emoji) == answer[0]:
+            winnings = random.randint(10, 15)
+            await ctx.send(f"\U0001f389 You won {winnings} pet coins! The coin landed on {answer[1]}. \U0001f389")
         else:
-            await ctx.send(f"You didn't guess correctly! The coin landed on {answer}. \U0001f626")
+            await ctx.send(f"You didn't guess correctly! The coin landed on {answer[1]}. \U0001f626")
 
     if winnings:
         connection = await bot.db.acquire()
