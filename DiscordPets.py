@@ -47,6 +47,7 @@ class DiscordPets(commands.Bot):
     async def on_ready(self):
         print(f"Username: {self.user.name}\n"
               f"ID: {self.user.id}\n")
+        await self.change_presence(game=discord.Game(name="dp!help"))
 
 
 loop = asyncio.get_event_loop()
