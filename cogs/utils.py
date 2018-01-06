@@ -121,3 +121,6 @@ def decay_stats(pet, current_time, last_interactions):
     if pet["cleanliness"] < 0:
         pet["cleanliness"] = 0
     return pet
+
+def possessive(name):
+    return (name + ("'" if name.endswith("s") else "'s"))

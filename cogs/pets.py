@@ -261,7 +261,7 @@ class Pets:
             await connection.execute(query, json.dumps(inventory), json.dumps(decayed_stats), ctx.author.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{pet['nickname']}'s saturation was increased by {fuzzy_item['restore_amount']}.")
+        await ctx.send(f"{utils.possessive(pet['nickname'])} saturation was increased by {fuzzy_item['restore_amount']}.")
 
     @commands.command()
     async def clean(self, ctx, item: str):
@@ -322,4 +322,4 @@ class Pets:
             await connection.execute(query, json.dumps(inventory), json.dumps(decayed_stats), ctx.author.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{pet['nickname']}'s cleanliness was increased by {fuzzy_item['restore_amount']}.")
+        await ctx.send(f"{utils.possessive(pet['nickname'])} cleanliness was increased by {fuzzy_item['restore_amount']}.")
