@@ -234,16 +234,16 @@ class Pets:
 
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
-            decayed_stats = utils.decay_stats(pet, current_time, last_interactions)
+            # Only decay one stat so that cleanliness isn't decreased an extra time
+            decayed_stats = utils.decay_stat(pet, "saturation", current_time, last_interactions)
         except KeyError:
             decayed_stats = pet
             self.bot.last_interactions[ctx.author.id] = {
-                "fed": current_time,
-                "cleaned": current_time,
-                "play": current_time
+                "saturation": current_time,
+                "cleanliness": current_time
             }
         else:
-            self.bot.last_interactions[ctx.author.id]["fed"] = current_time
+            self.bot.last_interactions[ctx.author.id]["saturation"] = current_time
 
         if decayed_stats["saturation"] == 50:
             await ctx.send(f"{pet['nickname']} is full.")
@@ -276,6 +276,7 @@ class Pets:
 
         pet = json.loads(profile["pet"])
         inventory = json.loads(profile["inventory"])
+        # Get the item from inventory using fuzzy string matching
         extract_item = fuzz_process.extractOne(item, inventory.keys(), score_cutoff=70)
         try:
             fuzzy_item_name = extract_item[0]
@@ -295,16 +296,16 @@ class Pets:
 
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
-            decayed_stats = utils.decay_stats(pet, current_time, last_interactions)
+            # Only decay one stat so that saturation isn't decreased an extra time
+            decayed_stats = utils.decay_stats(pet, "cleanliness", current_time, last_interactions)
         except KeyError:
             decayed_stats = pet
             self.bot.last_interactions[ctx.author.id] = {
-                "fed": current_time,
-                "cleaned": current_time,
-                "play": current_time
+                "saturation": current_time,
+                "cleanliness": current_time,
             }
         else:
-            self.bot.last_interactions[ctx.author.id]["cleaned"] = current_time
+            self.bot.last_interactions[ctx.author.id]["cleanliness"] = current_time
 
         if decayed_stats["cleanliness"] == 50:
             await ctx.send(f"{pet['nickname']} is already spotless.")

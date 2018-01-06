@@ -85,6 +85,28 @@ def create_stats_embed(author_name, profile):
 
     return embed
 
+def decay_stat(pet, stat_type, current_time, last_interactions):
+    # Times are in floored minutes
+    difference = current_time - last_interactions[stat_type]
+
+    # Less stat decay if they haven't been online in a while, maybe they were asleep
+    if (difference / 60) >= 4:
+        # Reduce their stat by 1 for every 20 min since they have fed their pet
+        subtract = int(difference / 20)
+        pet[stat_type] -= subtract
+    else:
+        # Reduce their stat by 1 for every 5 min since they have fed their pet
+        subtract = int(difference / 5)
+        pet[stat_type] -= subtract
+
+    # If stat become negative, remove the amount less than 0 from health
+    if pet[stat_type] < 0:
+        pet["health"] += pet[stat_type]
+
+    # Set all stats to 0 so they don't stay negative
+    if pet[stat_type] < 0:
+        pet[stat_type] = 0
+
 def decay_stats(pet, current_time, last_interactions):
     # Times are in floored minutes
     fed_difference = current_time - last_interactions["fed"]
@@ -121,6 +143,7 @@ def decay_stats(pet, current_time, last_interactions):
     if pet["cleanliness"] < 0:
         pet["cleanliness"] = 0
     return pet
+
 
 def possessive(name):
     return (name + ("'" if name.endswith("s") else "'s"))
