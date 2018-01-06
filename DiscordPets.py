@@ -35,7 +35,8 @@ class DiscordPets(commands.Bot):
         await self.wait_until_ready()
         await asyncio.sleep(1)
         extensions = ("cogs.owner",
-                      "cogs.pets")
+                      "cogs.pets",
+                      "cogs.error_handler")
         for extension in extensions:
             try:
                 self.load_extension(extension)
