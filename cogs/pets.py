@@ -267,7 +267,7 @@ class Pets:
     @commands.command()
     async def clean(self, ctx, item: str):
         """
-        Feed your pet
+        Clean your pet
         """
         profile = await self.get_profile(ctx.author.id)
         if not profile:
