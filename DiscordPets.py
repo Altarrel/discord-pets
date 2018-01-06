@@ -24,7 +24,7 @@ class DiscordPets(commands.Bot):
     def __init__(self, **kwargs):
         super().__init__(
             description=kwargs.pop("description"),
-            command_prefix="dp!"
+            command_prefix=config.prefix
         )
 
         self.last_interactions = {}
