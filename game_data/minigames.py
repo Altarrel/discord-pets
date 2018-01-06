@@ -28,13 +28,8 @@ async def coinflip(bot, ctx):
 
         answer = random.choice((("h", "heads"), ("t", "tails")))
         if guess.content.lower() in answer:
-<<<<<<< HEAD
-            winnings = random.randint(10, 25)
-            await ctx.send(f"\U0001f389 You won {winnings} pet coins! The coin landed on {answer[1]}. \U0001f389")
-=======
             winnings = random.randint(10, 25)
             await ctx.send(f"You won {winnings} pet coins! The coin landed on {answer[1]}. \U0001f389")
->>>>>>> dev
         else:
             await ctx.send(f"You didn't guess correctly! The coin landed on {answer[1]}. \U0001f626")
     else:
@@ -48,13 +43,8 @@ async def coinflip(bot, ctx):
 
         answer = random.choice((("\U0001f1ed", "heads"), ("\U0001f1f9", "tails")))
         if str(guess[0].emoji) == answer[0]:
-<<<<<<< HEAD
-            winnings = random.randint(10, 25)
-            await ctx.send(f"\U0001f389 You won {winnings} pet coins! The coin landed on {answer[1]}. \U0001f389")
-=======
             winnings = random.randint(10, 25)
             await ctx.send(f"You won {winnings} pet coins! The coin landed on {answer[1]}. \U0001f389")
->>>>>>> dev
         else:
             await ctx.send(f"You didn't guess correctly! The coin landed on {answer[1]}. \U0001f626")
 
