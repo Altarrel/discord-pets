@@ -225,12 +225,15 @@ class Pets:
         current_time = int(time.time() / 60)
 
         if not fuzzy_item or fuzzy_item["amount"] <= 0:
-            await ctx.send("You don't have that item in your inventory.")
+            await ctx.send(f"You don't have that item in your inventory.")
             return
 
         if fuzzy_item["restore_type"] != "saturation":
-            await ctx.send("That isn't a food item.")
+            await ctx.send(f"{fuzzy_item_name} isn't a food item.")
             return
+
+        if pet["saturation"] == 4:
+            await ctx.send(f"{pet['nickname']} is full.")
 
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
@@ -286,7 +289,11 @@ class Pets:
             return
 
         if fuzzy_item["restore_type"] != "cleanliness":
-            await ctx.send("That isn't a cleaning item.")
+            await ctx.send(f"{fuzzy_item_name} isn't a cleaning item.")
+            return
+
+        if pet["cleanliness"] == 4:
+            await ctx.send(f"{pet['nickname']} is already spotless.")
             return
 
         try:
