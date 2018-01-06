@@ -297,7 +297,7 @@ class Pets:
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
             # Only decay one stat so that saturation isn't decreased an extra time
-            decayed_stats = utils.decay_stats(pet, "cleanliness", current_time, last_interactions)
+            decayed_stats = utils.decay_stat(pet, "cleanliness", current_time, last_interactions)
         except KeyError:
             decayed_stats = pet
             self.bot.last_interactions[ctx.author.id] = {
