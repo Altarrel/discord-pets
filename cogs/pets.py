@@ -112,7 +112,7 @@ class Pets:
             }
 
         new_profile = dict(profile)
-        new_profile["pet"] = decayed_stats
+        new_profile["pet"] = json.dumps(decayed_stats)
         stats_embed = utils.create_stats_embed(ctx.author.name, new_profile)
         await ctx.send(embed=stats_embed)
 
