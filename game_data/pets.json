@@ -31,6 +31,17 @@
             "saturation": 40,
             "cleanliness": 40,
             "health": 40
+        },
+
+        "Vernon": {
+            "image": "https://imgur.com/RpXuxOU.jpg",
+            "nickname": "Vernon",
+            "name": "Vernon",
+            "age": 0,
+            "expansion": "Altarrel's Animals",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
         }
     }
 }
