@@ -44,28 +44,28 @@ conversions = {
     },
     "age": {
         0: "Newborn",
-        1: "Youth",
-        2: "Adolescent",
-        3: "Adult",
-        4: "Elderly"
+        1: "Adolescent",
+        2: "Adult",
+        3: "Elderly",
+        4: "Dead"
     }
 }
 
 def convert(type, data):
     # data shouldn't be less than 0 or greater than 5
     # there are checks in the functions that raise and lower it
-    to_int = int(data)
-    converted = conversions[type][to_int]
+    rounded = math.floor(data / 10)
+    converted = conversions[type][rounded]
     return converted
 
 def create_stats_embed(author_name, profile):
     pet = json.loads(profile["pet"])
     graveyard = json.loads(profile["graveyard"])
 
-    age = convert("age", pet["age"]) + f" {pet['age']}/4.0"
-    saturation = convert("saturation", pet["saturation"]) + f" {pet['saturation']}/4.0"
-    cleanliness = convert("cleanliness", pet["cleanliness"]) + f" {pet['cleanliness']}/4.0"
-    health = convert("health", pet["health"]) + f" {pet['health']}/4.0"
+    age = convert("age", pet["age"]) + f" {pet['age']}/40"
+    saturation = convert("saturation", pet["saturation"]) + f" {pet['saturation']}/40"
+    cleanliness = convert("cleanliness", pet["cleanliness"]) + f" {pet['cleanliness']}/40"
+    health = convert("health", pet["health"]) + f" {pet['health']}/40"
     currency = profile["currency"]
 
     embed = discord.Embed(title=f"Pet and Stats for {author_name}")
@@ -93,18 +93,18 @@ def decay_stats(pet, current_time, last_interactions):
     # Less stat decay if they haven't been online in a while, maybe they were asleep
     if (fed_difference / 60) >= 4:
         # Reduce their stat by .1 for every 20 min since they have fed their pet
-        subtract = .1 * int(fed_difference / 20)
+        subtract = int(fed_difference / 20)
         pet["saturation"] -= subtract
     else:
         # Reduce their stat by .1 for every 5 min since they have fed their pet
-        subtract = .1 * int(fed_difference / 5)
+        subtract = int(fed_difference / 5)
         pet["saturation"] -= subtract
 
     if (cleaned_difference / 60) >= 4:
-        subtract = .1 * int(cleaned_difference / 20)
+        subtract = int(cleaned_difference / 20)
         pet["cleanliness"] -= subtract
     else:
-        subtract = .1 * int(cleaned_difference / 5)
+        subtract = int(cleaned_difference / 5)
         pet["cleanliness"] -= subtract
 
     # If stats become negative, remove the amount less than 0 from health

@@ -245,14 +245,14 @@ class Pets:
         else:
             self.bot.last_interactions[ctx.author.id]["fed"] = current_time
 
-        if decayed_stats["saturation"] == 4:
+        if decayed_stats["saturation"] == 50:
             await ctx.send(f"{pet['nickname']} is full.")
             return
 
         decayed_stats["saturation"] += fuzzy_item["restore_amount"]
 
-        if decayed_stats["saturation"] > 4:
-            decayed_stats["saturation"] = 4
+        if decayed_stats["saturation"] > 50:
+            decayed_stats["saturation"] = 50
 
         inventory[fuzzy_item_name]["amount"] -= 1
 
@@ -306,14 +306,14 @@ class Pets:
         else:
             self.bot.last_interactions[ctx.author.id]["cleaned"] = current_time
 
-        if decayed_stats["cleanliness"] == 4:
+        if decayed_stats["cleanliness"] == 50:
             await ctx.send(f"{pet['nickname']} is already spotless.")
             return
 
         decayed_stats["cleanliness"] += fuzzy_item["restore_amount"]
 
-        if decayed_stats["cleanliness"] > 4:
-            decayed_stats["cleanliness"] = 4
+        if decayed_stats["cleanliness"] > 50:
+            decayed_stats["cleanliness"] = 50
 
         inventory[fuzzy_item_name]["amount"] -= 1
 
