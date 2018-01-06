@@ -111,13 +111,7 @@ class Pets:
                 "play": current_time
             }
 
-        connection = await self.bot.db.acquire()
-        async with connection.transaction():
-            query = """UPDATE users SET pet = $1 WHERE id = $2;"""
-            await connection.execute(query, json.dumps(decayed_stats), ctx.author.id)
-        await self.bot.db.release(connection)
-
-        profile = await self.get_profile(ctx.author.id)
+        profile["pet"] = decayed_stats
         stats_embed = utils.create_stats_embed(ctx.author.name, profile)
         await ctx.send(embed=stats_embed)
 
@@ -248,7 +242,7 @@ class Pets:
                 "play": current_time
             }
         else:
-            self.bot.last_interactions[ctx.author.id]["cleaned"] = current_time
+            self.bot.last_interactions[ctx.author.id]["fed"] = current_time
 
         decayed_stats["saturation"] += fuzzy_item["restore_amount"]
 
