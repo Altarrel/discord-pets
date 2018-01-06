@@ -232,9 +232,6 @@ class Pets:
             await ctx.send(f"{fuzzy_item_name} isn't a food item.")
             return
 
-        if pet["saturation"] == 4:
-            await ctx.send(f"{pet['nickname']} is full.")
-
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
             decayed_stats = utils.decay_stats(pet, current_time, last_interactions)
@@ -247,6 +244,10 @@ class Pets:
             }
         else:
             self.bot.last_interactions[ctx.author.id]["fed"] = current_time
+
+        if decayed_stats["saturation"] == 4:
+            await ctx.send(f"{pet['nickname']} is full.")
+            return
 
         decayed_stats["saturation"] += fuzzy_item["restore_amount"]
 
@@ -292,10 +293,6 @@ class Pets:
             await ctx.send(f"{fuzzy_item_name} isn't a cleaning item.")
             return
 
-        if pet["cleanliness"] == 4:
-            await ctx.send(f"{pet['nickname']} is already spotless.")
-            return
-
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
             decayed_stats = utils.decay_stats(pet, current_time, last_interactions)
@@ -308,6 +305,10 @@ class Pets:
             }
         else:
             self.bot.last_interactions[ctx.author.id]["cleaned"] = current_time
+
+        if decayed_stats["cleanliness"] == 4:
+            await ctx.send(f"{pet['nickname']} is already spotless.")
+            return
 
         decayed_stats["cleanliness"] += fuzzy_item["restore_amount"]
 
