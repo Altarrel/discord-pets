@@ -91,12 +91,12 @@ def decay_stat(pet, stat_type, current_time, last_interactions):
 
     # Less stat decay if they haven't been online in a while, maybe they were asleep
     if (difference / 60) >= 4:
-        # Reduce their stat by 1 for every 20 min since they have fed their pet
-        subtract = int(difference / 20)
+        # Reduce their stat by 1 for every 30 min since they have fed their pet
+        subtract = int(difference / 30)
         pet[stat_type] -= subtract
     else:
-        # Reduce their stat by 1 for every 5 min since they have fed their pet
-        subtract = int(difference / 5)
+        # Reduce their stat by 1 for every 10 min since they have fed their pet
+        subtract = int(difference / 10)
         pet[stat_type] -= subtract
 
     # If stat become negative, remove the amount less than 0 from health
@@ -114,19 +114,19 @@ def decay_stats(pet, current_time, last_interactions):
 
     # Less stat decay if they haven't been online in a while, maybe they were asleep
     if (fed_difference / 60) >= 4:
-        # Reduce their stat by .1 for every 20 min since they have fed their pet
-        subtract = int(fed_difference / 20)
+        # Reduce their stat by .1 for every 30 min since they have fed their pet
+        subtract = int(fed_difference / 30)
         pet["saturation"] -= subtract
     else:
-        # Reduce their stat by .1 for every 5 min since they have fed their pet
-        subtract = int(fed_difference / 5)
+        # Reduce their stat by .1 for every 10 min since they have fed their pet
+        subtract = int(fed_difference / 10)
         pet["saturation"] -= subtract
 
     if (cleaned_difference / 60) >= 4:
-        subtract = int(cleaned_difference / 20)
+        subtract = int(cleaned_difference / 30)
         pet["cleanliness"] -= subtract
     else:
-        subtract = int(cleaned_difference / 5)
+        subtract = int(cleaned_difference / 10)
         pet["cleanliness"] -= subtract
 
     # If stats become negative, remove the amount less than 0 from health
