@@ -159,7 +159,7 @@ class Pets:
         embed = discord.Embed()
         for item in store:
             if store[item]["amount"] > 0:
-                embed.add_field(name=item, value=f"Price: {store[item]['price']}")
+                embed.add_field(name=item, value=f"Price: {store[item]['price']}\nStat Restore Type: {store[item]['restore_type']}\nStat Restore Amount: {store[item]['restore_amount']}")
         await ctx.send(embed=embed)
 
     @store.command()
