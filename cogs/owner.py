@@ -4,6 +4,7 @@ import sys
 import traceback
 
 def setup(bot):
+    bot._last_result = None
     bot.add_cog(Owner(bot))
     bot.add_cog(Eval(bot))
 
