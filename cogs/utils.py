@@ -168,3 +168,7 @@ def decay_stats(pet, current_time, last_interactions):
 
 def possessive(name):
     return (name + ("'" if name.endswith("s") else "'s"))
+
+def a_or_an(text):
+    vowels = ("a", "e", "i", "o", "u", "A", "E", "I", "O", "U")
+    return ("an" if text[0] in vowels and text != "user" else "a")
