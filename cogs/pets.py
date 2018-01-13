@@ -169,7 +169,7 @@ class Pets:
         minigame = random.choice(all_minigames)
         await minigame(self.bot, ctx)
 
-    @commands.group(invoke_without_command=True)
+    @commands.group()
     async def store(self, ctx):
         """
         Items for your pet
@@ -180,7 +180,7 @@ class Pets:
                 embed.add_field(name=item, value=f"Price: {store[item]['price']}\nStat Restore Type: {store[item]['restore_type'].title()}\nStat Restore Amount: {store[item]['restore_amount']}")
         await ctx.send(embed=embed)
 
-    @store.command()
+    @commands.command()
     async def buy(self, ctx, *, item: str):
         """
         Buy items for your pet
