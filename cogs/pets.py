@@ -38,7 +38,7 @@ class Pets:
 
         profile = await self.get_profile(ctx.author.id)
         if profile:
-            await ctx.send(f"You already have a profile, use {ctx.prefix}hardreset "\
+            await ctx.send(f"{ctx.author}, you already have a profile, use {ctx.prefix}hardreset "\
                 "if you want to delete it.")
             return
 
@@ -58,13 +58,13 @@ class Pets:
         current_time = math.floor(time.time() / 60)
         self.bot.last_interactions[ctx.author.id] = {
             "fed": current_time,
-            "cleaned": current_time,
-            "play": current_time
+            "cleaned": current_time
         }
 
-        await ctx.send(f"Your first pet is **{new_pet['name']}** from the **{pet_expansion}** expansion.", embed=stats_embed)
+        await ctx.send(f"{ctx.author}, your first pet is **{new_pet['name']}** from the **{pet_expansion}** expansion.", embed=stats_embed)
 
     @commands.command()
+    @commands.cooldown(1, 604800, commands.BucketType.user)
     async def hardreset(self, ctx):
         """
         Delete your profile
@@ -72,10 +72,10 @@ class Pets:
 
         profile = await self.get_profile(ctx.author.id)
         if not profile:
-            await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
 
-        await ctx.send(f"This will delete your profile. You will lose your pet, currency, and inventory. "\
+        await ctx.send(f"{ctx.author}, this will delete your profile. You will lose your pet, currency, and inventory. "\
             f"You will be able to use the bot again with {ctx.prefix}start, but you will be starting over. Say CONFIRM to confirm the deletion of your profile.")
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
@@ -83,7 +83,7 @@ class Pets:
         try:
             msg = await self.bot.wait_for("message", check=check, timeout=30)
         except asyncio.TimeoutError:
-            await ctx.send("You took too long to respond, reset canceled.")
+            await ctx.send(f"{ctx.author}, you took too long to respond, reset canceled.")
             return
 
         if msg.content == "CONFIRM":
@@ -92,11 +92,12 @@ class Pets:
                 query = """DELETE FROM users WHERE id = $1"""
                 await connection.execute(query, ctx.author.id)
             await self.bot.db.release(connection)
-            await ctx.send("Your profile was deleted.")
+            await ctx.send(f"{ctx.author}, your profile was deleted.")
         else:
-            await ctx.send("Invalid response, reset canceled.")
+            await ctx.send(f"{ctx.author}, invalid response, reset canceled.")
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def stats(self, ctx):
         """
         Check your stats
@@ -104,7 +105,7 @@ class Pets:
 
         profile = await self.get_profile(ctx.author.id)
         if not profile:
-            await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
 
         pet = json.loads(profile["pet"])
@@ -127,6 +128,7 @@ class Pets:
         await ctx.send(embed=stats_embed)
 
     @commands.command(aliases=["inv"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def inventory(self, ctx):
         """
         Check your inventory
@@ -134,7 +136,7 @@ class Pets:
 
         profile = await self.get_profile(ctx.author.id)
         if not profile:
-            await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
 
         inventory = json.loads(profile["inventory"])
@@ -144,12 +146,13 @@ class Pets:
             if inventory[item]["amount"] > 0:
                 msg += f"-{item}: {inventory[item]['amount']}\n"
         if msg == original_msg:
-            await ctx.send("Your inventory is empty.")
+            await ctx.send(f"{ctx.author}, your inventory is empty.")
             return
         msg += "```"
         await ctx.send(msg)
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def play(self, ctx):
         """
         Play a game to win pet coins
@@ -157,19 +160,20 @@ class Pets:
 
         profile = await self.get_profile(ctx.author.id)
         if not profile:
-            await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
 
         # Death check
         pet = json.loads(profile["pet"])
         if pet["health"] <= 0 or pet["age"] >= 14:
-            await ctx.send(f"{pet['nickname']} is no longer with us.")
+            await ctx.send(f"{ctx.author}, {pet['nickname']} is no longer with us.")
             return
 
         minigame = random.choice(all_minigames)
         await minigame(self.bot, ctx)
 
     @commands.group()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def store(self, ctx):
         """
         Items for your pet
@@ -181,13 +185,14 @@ class Pets:
         await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def buy(self, ctx, *, item: str):
         """
         Buy items for your pet
         """
         profile = await self.get_profile(ctx.author.id)
         if not profile:
-            await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
 
         extract_item = fuzz_process.extractOne(item, store.keys(), score_cutoff=70)
@@ -197,14 +202,14 @@ class Pets:
             store_item = None
 
         if not store_item:
-            await ctx.send("That item isn't in the store.")
+            await ctx.send(f"{ctx.author}, that item isn't in the store.")
             return
 
         balance = profile["currency"]
         price = store[store_item]["price"]
 
         if price > balance:
-            await ctx.send(f"You don't have enough coins to buy {store_item}.")
+            await ctx.send(f"{ctx.author}, you don't have enough coins to buy {store_item}.")
             return
         else:
             balance -= price
@@ -219,22 +224,23 @@ class Pets:
                 await connection.execute(query, balance, json.dumps(inventory), ctx.author.id)
             await self.bot.db.release(connection)
 
-            await ctx.send(f"You bought {store[store_item]['amount']} {store_item} for {price} coins.")
+            await ctx.send(f"{ctx.author}, you bought {store[store_item]['amount']} {store_item} for {price} coins.")
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def feed(self, ctx, item: str):
         """
         Feed your pet
         """
         profile = await self.get_profile(ctx.author.id)
         if not profile:
-            await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
 
         pet = json.loads(profile["pet"])
         # Early pet death checking
         if pet["health"] <= 0 or pet["age"] >= 14:
-            await ctx.send(f"{pet['nickname']} is no longer with us.")
+            await ctx.send(f"{ctx.author}, {pet['nickname']} is no longer with us.")
             return
 
         inventory = json.loads(profile["inventory"])
@@ -272,26 +278,26 @@ class Pets:
                 query = """UPDATE users SET pet = $1, graveyard = $2 WHERE id = $3;"""
                 await self.bot.db.execute(query, json.dumps(pet), json.dumps(graveyard), ctx.author.id)
             await self.bot.db.release(connection)
-            await ctx.send(f"{pet['nickname']} has passed away.")
+            await ctx.send(f"{ctx.author}, {pet['nickname']} has passed away.")
             return
 
         # These come after death check because death message should override
         if not fuzzy_item or fuzzy_item["amount"] <= 0:
-            await ctx.send(f"You don't have that item in your inventory.")
+            await ctx.send(f"{ctx.author}, you don't have that item in your inventory.")
             return
 
         if fuzzy_item["restore_type"] != "saturation":
-            await ctx.send(f"{fuzzy_item_name} isn't a food item.")
+            await ctx.send(f"{ctx.author}, {fuzzy_item_name} isn't a food item.")
             return
 
-        if decayed_stats["saturation"] == 50:
-            await ctx.send(f"{pet['nickname']} is full.")
+        if decayed_stats["saturation"] == 40:
+            await ctx.send(f"{ctx.author}, {pet['nickname']} is full.")
             return
 
         decayed_stats["saturation"] += fuzzy_item["restore_amount"]
 
-        if decayed_stats["saturation"] > 50:
-            decayed_stats["saturation"] = 50
+        if decayed_stats["saturation"] > 40:
+            decayed_stats["saturation"] = 40
 
         inventory[fuzzy_item_name]["amount"] -= 1
 
@@ -301,22 +307,23 @@ class Pets:
             await connection.execute(query, json.dumps(inventory), json.dumps(decayed_stats), ctx.author.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{utils.possessive(pet['nickname'])} saturation was increased by {fuzzy_item['restore_amount']}.")
+        await ctx.send(f"{ctx.author}, {utils.possessive(pet['nickname'])} saturation was increased by {fuzzy_item['restore_amount']}.")
 
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def clean(self, ctx, item: str):
         """
         Clean your pet
         """
         profile = await self.get_profile(ctx.author.id)
         if not profile:
-            await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
 
         pet = json.loads(profile["pet"])
         # Early pet death checking
         if pet["health"] <= 0 or pet["age"] >= 14:
-            await ctx.send(f"{pet['nickname']} is no longer with us.")
+            await ctx.send(f"{ctx.author}, {pet['nickname']} is no longer with us.")
             return
 
         inventory = json.loads(profile["inventory"])
@@ -355,25 +362,25 @@ class Pets:
                 query = """UPDATE users SET pet = $1, graveyard = $2 WHERE id = $3;"""
                 await self.bot.db.execute(query, json.dumps(pet), json.dumps(graveyard), ctx.author.id)
             await self.bot.db.release(connection)
-            await ctx.send(f"{pet['nickname']} has passed away.")
+            await ctx.send(f"{ctx.author}, {pet['nickname']} has passed away.")
             return
 
         if not fuzzy_item or fuzzy_item["amount"] <= 0:
-            await ctx.send("You don't have that item in your inventory.")
+            await ctx.send(f"{ctx.author}, you don't have that item in your inventory.")
             return
 
         if fuzzy_item["restore_type"] != "cleanliness":
-            await ctx.send(f"{fuzzy_item_name} isn't a cleaning item.")
+            await ctx.send(f"{ctx.author}, {fuzzy_item_name} isn't a cleaning item.")
             return
 
-        if decayed_stats["cleanliness"] == 50:
-            await ctx.send(f"{pet['nickname']} is already spotless.")
+        if decayed_stats["cleanliness"] == 40:
+            await ctx.send(f"{ctx.author}, {pet['nickname']} is already spotless.")
             return
 
         decayed_stats["cleanliness"] += fuzzy_item["restore_amount"]
 
-        if decayed_stats["cleanliness"] > 50:
-            decayed_stats["cleanliness"] = 50
+        if decayed_stats["cleanliness"] > 40:
+            decayed_stats["cleanliness"] = 40
 
         inventory[fuzzy_item_name]["amount"] -= 1
 
@@ -383,4 +390,43 @@ class Pets:
             await connection.execute(query, json.dumps(inventory), json.dumps(decayed_stats), ctx.author.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{utils.possessive(pet['nickname'])} cleanliness was increased by {fuzzy_item['restore_amount']}.")
+        await ctx.send(f"{ctx.author}, {utils.possessive(pet['nickname'])} cleanliness was increased by {fuzzy_item['restore_amount']}.")
+
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def newpet(self, ctx):
+        """
+        Get a new pet
+        """
+
+        profile = await self.get_profile(ctx.author.id)
+        if not profile:
+            await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
+            return
+
+        pet = json.loads(profile["pet"])
+
+        # Death check so you can only get a new pet if your current one is dead
+        if not pet["health"] <= 0 or not pet["age"] >= 14:
+            await ctx.send(f"{ctx.author}, you can't get a new pet right now.")
+            return
+
+        pet_expansion, new_pet = utils.pick_new_pet()
+        new_pet["birth_time"] = int(time.time() / 60)
+
+        connection = await self.bot.db.acquire()
+        async with connection.transaction():
+            query = """UPDATE users SET pet = $1 WHERE id = $2"""
+            await connection.execute(query, json.dumps(new_pet), ctx.author.id)
+        await self.bot.db.release(connection)
+
+        profile = {"pet": json.dumps(new_pet), "currency": 0, "graveyard": "[]"}
+        stats_embed = utils.create_stats_embed(ctx.author.name, profile)
+
+        current_time = int(time.time() / 60)
+        self.bot.last_interactions[ctx.author.id] = {
+            "fed": current_time,
+            "cleaned": current_time
+        }
+
+        await ctx.send(f"{ctx.author}, your new pet is **{new_pet['name']}** from the **{pet_expansion}** expansion.", embed=stats_embed)

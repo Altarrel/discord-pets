@@ -10,9 +10,12 @@ import config
 async def run():
     description = "A bot written in Python by Altarrel"
     db = await asyncpg.create_pool(**config.credentials)
-    await db.execute("CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, currency int, inventory text, pet text, graveyard text);")
+    await db.execute("""CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, currency int, inventory text, pet text, graveyard text);""")
+    await db.execute("""CREATE TABLE IF NOT EXISTS blocked(id bigint);""")
 
-    bot = DiscordPets(description=description, db=db)
+    blocked = await db.fetch("""SELECT * FROM blocked""")
+
+    bot = DiscordPets(description=description, db=db, blocked=blocked)
     try:
         await bot.start(config.token)
     except KeyboardInterrupt:
@@ -29,6 +32,7 @@ class DiscordPets(commands.Bot):
 
         self.last_interactions = {}
         self.db = kwargs.pop("db")
+        self.blocked = kwargs.pop("blocked")
         self.loop.create_task(self.load_all_extensions())
 
     async def load_all_extensions(self):
@@ -41,7 +45,7 @@ class DiscordPets(commands.Bot):
             try:
                 self.load_extension(extension)
             except Exception as e:
-                print(f'Failed to load extension {extension}.', file=sys.stderr)
+                print(f"Failed to load extension {extension}.", file=sys.stderr)
                 traceback.print_exc()
 
     async def on_ready(self):

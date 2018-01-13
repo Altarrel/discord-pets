@@ -14,7 +14,9 @@ class ErrorHandler:
         if isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(f"You must provide {error.param.name}.")
+            await ctx.send(f"{ctx.author}, you must provide {error.param.name}.")
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(f"{ctx.author}, you can use that command again in {error.retry_after} seconds.")
         else:
             print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
