@@ -74,12 +74,15 @@ def create_stats_embed(author_name, profile):
     embed.add_field(name="Expansion", value=pet["expansion"])
     embed.add_field(name="Nickname", value=pet["nickname"])
     embed.add_field(name="Age", value=age)
-    embed.add_field(name="Saturation", value=saturation)
-    embed.add_field(name="Cleanliness", value=cleanliness)
-    embed.add_field(name="Health", value=health)
+
+    if pet["health"] > 0:
+        embed.add_field(name="Saturation", value=saturation)
+        embed.add_field(name="Cleanliness", value=cleanliness)
+        embed.add_field(name="Health", value=health)
+    else:
+        embed.add_field(name="Dead", value="Your pet is dead.", inline=False)
 
     embed.add_field(name="\u200b", value="\u200b", inline=False)
-
     embed.add_field(name="Currency", value=currency)
     embed.add_field(name="Pet Iteration", value=len(graveyard) + 1)
 

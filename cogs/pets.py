@@ -18,7 +18,9 @@ def setup(bot):
     bot.add_cog(Pets(bot))
 
 class Pets:
-    """Pet related commands"""
+    """
+    Pet related commands
+    """
 
     def __init__(self, bot):
         self.bot = bot
@@ -29,7 +31,9 @@ class Pets:
 
     @commands.command()
     async def start(self, ctx):
-        """Get your first pet"""
+        """
+        Get your first pet
+        """
 
         profile = await self.get_profile(ctx.author.id)
         if profile:
@@ -60,7 +64,9 @@ class Pets:
 
     @commands.command()
     async def hardreset(self, ctx):
-        """Delete your profile"""
+        """
+        Delete your profile
+        """
 
         profile = await self.get_profile(ctx.author.id)
         if not profile:
@@ -90,7 +96,9 @@ class Pets:
 
     @commands.command()
     async def stats(self, ctx):
-        """Check your stats"""
+        """
+        Check your stats
+        """
 
         profile = await self.get_profile(ctx.author.id)
         if not profile:
@@ -118,7 +126,9 @@ class Pets:
 
     @commands.command(aliases=["inv"])
     async def inventory(self, ctx):
-        """Check your inventory"""
+        """
+        Check your inventory
+        """
 
         profile = await self.get_profile(ctx.author.id)
         if not profile:
@@ -146,6 +156,11 @@ class Pets:
         profile = await self.get_profile(ctx.author.id)
         if not profile:
             await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
+            return
+
+        pet = json.loads(profile["pet"])
+        if pet["health"] <= 0:
+            await ctx.send(f"{pet['nickname']} is no longer with us.")
             return
 
         minigame = random.choice(all_minigames)
@@ -214,6 +229,11 @@ class Pets:
             return
 
         pet = json.loads(profile["pet"])
+        # Early pet death checking
+        if pet["health"] <= 0:
+            await ctx.send(f"{pet['nickname']} is no longer with us.")
+            return
+
         inventory = json.loads(profile["inventory"])
         extract_item = fuzz_process.extractOne(item, inventory.keys(), score_cutoff=70)
         try:
@@ -224,17 +244,9 @@ class Pets:
             fuzzy_item = None
         current_time = int(time.time() / 60)
 
-        if not fuzzy_item or fuzzy_item["amount"] <= 0:
-            await ctx.send(f"You don't have that item in your inventory.")
-            return
-
-        if fuzzy_item["restore_type"] != "saturation":
-            await ctx.send(f"{fuzzy_item_name} isn't a food item.")
-            return
-
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
-            # Only decay one stat so that cleanliness isn't decreased an extra time
+            # Only decay one stat so that stats aren't decreased an extra time
             decayed_stats = utils.decay_stat(pet, "saturation", current_time, last_interactions)
         except KeyError:
             decayed_stats = pet
@@ -244,6 +256,30 @@ class Pets:
             }
         else:
             self.bot.last_interactions[ctx.author.id]["saturation"] = current_time
+
+        # Check to make sure their pet didn't die
+        # If it did, update the graveyard and stop them from being able to use commands properly
+        # until they get a new one
+        if decayed_stats["health"] <= 0:
+            graveyard = json.loads(profile["graveyard"])
+            graveyard.append(pet)
+
+            connection = await self.bot.db.acquire()
+            async with connection.transaction():
+                query = """UPDATE users SET pet = $1, graveyard = $2 WHERE id = $3;"""
+                await self.bot.db.execute(query, json.dumps(pet), json.dumps(graveyard), ctx.author.id)
+            await self.bot.db.release(connection)
+            await ctx.send(f"{pet['nickname']} has passed away.")
+            return
+
+        # These come after death check because death message should override
+        if not fuzzy_item or fuzzy_item["amount"] <= 0:
+            await ctx.send(f"You don't have that item in your inventory.")
+            return
+
+        if fuzzy_item["restore_type"] != "saturation":
+            await ctx.send(f"{fuzzy_item_name} isn't a food item.")
+            return
 
         if decayed_stats["saturation"] == 50:
             await ctx.send(f"{pet['nickname']} is full.")
@@ -275,6 +311,11 @@ class Pets:
             return
 
         pet = json.loads(profile["pet"])
+        # Early pet death checking
+        if pet["health"] <= 0:
+            await ctx.send(f"{pet['nickname']} is no longer with us.")
+            return
+
         inventory = json.loads(profile["inventory"])
         # Get the item from inventory using fuzzy string matching
         extract_item = fuzz_process.extractOne(item, inventory.keys(), score_cutoff=70)
@@ -285,14 +326,6 @@ class Pets:
             fuzzy_item_name = None
             fuzzy_item = None
         current_time = int(time.time() / 60)
-
-        if not fuzzy_item or fuzzy_item["amount"] <= 0:
-            await ctx.send("You don't have that item in your inventory.")
-            return
-
-        if fuzzy_item["restore_type"] != "cleanliness":
-            await ctx.send(f"{fuzzy_item_name} isn't a cleaning item.")
-            return
 
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
@@ -306,6 +339,29 @@ class Pets:
             }
         else:
             self.bot.last_interactions[ctx.author.id]["cleanliness"] = current_time
+
+        # Check to make sure their pet didn't die
+        # If it did, update the graveyard and stop them from being able to use commands properly
+        # until they get a new one
+        if decayed_stats["health"] <= 0:
+            graveyard = json.loads(profile["graveyard"])
+            graveyard.append(pet)
+
+            connection = await self.bot.db.acquire()
+            async with connection.transaction():
+                query = """UPDATE users SET pet = $1, graveyard = $2 WHERE id = $3;"""
+                await self.bot.db.execute(query, json.dumps(pet), json.dumps(graveyard), ctx.author.id)
+            await self.bot.db.release(connection)
+            await ctx.send(f"{pet['nickname']} has passed away.")
+            return
+
+        if not fuzzy_item or fuzzy_item["amount"] <= 0:
+            await ctx.send("You don't have that item in your inventory.")
+            return
+
+        if fuzzy_item["restore_type"] != "cleanliness":
+            await ctx.send(f"{fuzzy_item_name} isn't a cleaning item.")
+            return
 
         if decayed_stats["cleanliness"] == 50:
             await ctx.send(f"{pet['nickname']} is already spotless.")
