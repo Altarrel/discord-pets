@@ -54,15 +54,29 @@ conversions = {
 def convert(type, data):
     # data shouldn't be less than 0 or greater than 5
     # there are checks in the functions that raise and lower it
-    rounded = math.floor(data / 10)
+    rounded = int(data / 10)
     converted = conversions[type][rounded]
     return converted
+
+def age_convert(age):
+    text = ""
+    if 0 <= age < 2:
+        text = "Newborn"
+    elif 2 < age < 6:
+        text = "Adolescent"
+    elif 6 < age < 10:
+        text = "Adult"
+    elif 10 < age < 14:
+        text = "Elderly"
+    elif age >= 14:
+        text = "Dead"
+    return text
 
 def create_stats_embed(author_name, profile):
     pet = json.loads(profile["pet"])
     graveyard = json.loads(profile["graveyard"])
 
-    age = convert("age", pet["age"]) + f" {pet['age']}/40"
+    age = age_convert(pet["age"]) + f" {pet['age']}/14"
     saturation = convert("saturation", pet["saturation"]) + f" {pet['saturation']}/40"
     cleanliness = convert("cleanliness", pet["cleanliness"]) + f" {pet['cleanliness']}/40"
     health = convert("health", pet["health"]) + f" {pet['health']}/40"
@@ -75,7 +89,7 @@ def create_stats_embed(author_name, profile):
     embed.add_field(name="Nickname", value=pet["nickname"])
     embed.add_field(name="Age", value=age)
 
-    if pet["health"] > 0:
+    if pet["health"] > 0 or pet["age"] >= 14:
         embed.add_field(name="Saturation", value=saturation)
         embed.add_field(name="Cleanliness", value=cleanliness)
         embed.add_field(name="Health", value=health)
@@ -114,6 +128,10 @@ def decay_stats(pet, current_time, last_interactions):
     # Times are in floored minutes
     fed_difference = current_time - last_interactions["fed"]
     cleaned_difference = current_time - last_interactions["cleaned"]
+
+    # age_difference will be in floored days
+    age_days = int((current_time - pet["birth_time"]) / 1440)
+    pet["age"] = age_days
 
     # Less stat decay if they haven't been online in a while, maybe they were asleep
     if (fed_difference / 60) >= 4:

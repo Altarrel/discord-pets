@@ -26,7 +26,8 @@ class Pets:
         self.bot = bot
 
     async def get_profile(self, user_id):
-        profile = await self.bot.db.fetchrow("SELECT * FROM users WHERE id = $1;", user_id)
+        query = """SELECT * FROM users WHERE id = $1"""
+        profile = await self.bot.db.fetchrow(query, user_id)
         return profile
 
     @commands.command()
@@ -42,6 +43,7 @@ class Pets:
             return
 
         pet_expansion, new_pet = utils.pick_new_pet()
+        new_pet["birth_time"] = int(time.time() / 60)
 
         connection = await self.bot.db.acquire()
         async with connection.transaction():
@@ -158,8 +160,9 @@ class Pets:
             await ctx.send(f"You don't have a profile, use {ctx.prefix}start to get one.")
             return
 
+        # Death check
         pet = json.loads(profile["pet"])
-        if pet["health"] <= 0:
+        if pet["health"] <= 0 or pet["age"] >= 14:
             await ctx.send(f"{pet['nickname']} is no longer with us.")
             return
 
@@ -230,7 +233,7 @@ class Pets:
 
         pet = json.loads(profile["pet"])
         # Early pet death checking
-        if pet["health"] <= 0:
+        if pet["health"] <= 0 or pet["age"] >= 14:
             await ctx.send(f"{pet['nickname']} is no longer with us.")
             return
 
@@ -260,7 +263,7 @@ class Pets:
         # Check to make sure their pet didn't die
         # If it did, update the graveyard and stop them from being able to use commands properly
         # until they get a new one
-        if decayed_stats["health"] <= 0:
+        if decayed_stats["health"] <= 0 or decayed_stats["age"] >= 14:
             graveyard = json.loads(profile["graveyard"])
             graveyard.append(pet)
 
@@ -312,7 +315,7 @@ class Pets:
 
         pet = json.loads(profile["pet"])
         # Early pet death checking
-        if pet["health"] <= 0:
+        if pet["health"] <= 0 or pet["age"] >= 14:
             await ctx.send(f"{pet['nickname']} is no longer with us.")
             return
 
@@ -343,7 +346,7 @@ class Pets:
         # Check to make sure their pet didn't die
         # If it did, update the graveyard and stop them from being able to use commands properly
         # until they get a new one
-        if decayed_stats["health"] <= 0:
+        if decayed_stats["health"] <= 0 or decayed_stats["age"] >= 14:
             graveyard = json.loads(profile["graveyard"])
             graveyard.append(pet)
 
