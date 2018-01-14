@@ -28,6 +28,7 @@ class DiscordPets(commands.Bot):
         super().__init__(
             description=kwargs.pop("description"),
             command_prefix=config.prefix
+            game=discord.Game(name=f"{config.prefix}help")
         )
 
         self.last_interactions = {}
@@ -52,7 +53,6 @@ class DiscordPets(commands.Bot):
     async def on_ready(self):
         print(f"Username: {self.user.name}\n"
               f"ID: {self.user.id}\n")
-        await self.change_presence(game=discord.Game(name=f"{config.prefix}help"))
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(run())
