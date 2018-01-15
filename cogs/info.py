@@ -29,6 +29,7 @@ class InfoCommands:
             "- block [user] -> Blocks a user from using the bot.\n"\
             "- unblock [user] -> Unblocks a user.\n"\
             "- die -> Kills the script, it will usually be revived by pm2.\n"\
+            "- killpet [user] -> Kill a user's pet.\n"
 
         help_msg += "# Utility\n"\
         "- help -> Shows this message.\n"\
@@ -46,8 +47,8 @@ class InfoCommands:
         "- newpet -> Get a new pet if yours has passed away.\n"\
         "- play -> Play a minigame to earn coins.\n"\
         "- feed [item] -> Feed your pet a food item.\n"\
-        "- clean [item] -> Clean your pet with a cleaning item.\n"
-        help_msg += "```"
+        "- clean [item] -> Clean your pet with a cleaning item.\n"\
+        "```"
 
         await ctx.send(help_msg)
 
@@ -75,4 +76,4 @@ class InfoCommands:
         Invite the bot to your server
         """
 
-        await ctx.send(f"<https://discordapp.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=0&scope=bot>")
+        await ctx.send(f"{ctx.author} | <https://discordapp.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=0&scope=bot>")

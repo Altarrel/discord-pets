@@ -27,17 +27,17 @@ class Owner:
         """
 
         if not extension:
-            await ctx.send(f"{ctx.author}, you must specify an extension to load.")
+            await ctx.send(f"{ctx.author} | You must specify an extension to load.")
             return
         try:
             self.bot.load_extension(extension)
         except Exception as e:
             await ctx.author.send(f"```py\n{traceback.format_exc()}\n```")
-            await ctx.send(f"{ctx.author}, failed to load extension: {extension}. Check your DMs for more details.")
+            await ctx.send(f"{ctx.author} | Failed to load extension: {extension}. Check your DMs for more details.")
             print(f"Failed to load extension: {extension}", file=sys.stderr)
             traceback.print_exc()
         else:
-            await ctx.send(f"{ctx.author}, {extension} loaded.")
+            await ctx.send(f"{ctx.author} | {extension} loaded.")
 
     @commands.command()
     async def unload(self, ctx, *, extension: str=None):
@@ -46,17 +46,17 @@ class Owner:
         """
 
         if not extension:
-            await ctx.send(f"{ctx.author}, you must specify an extension to unload.")
+            await ctx.send(f"{ctx.author} | You must specify an extension to unload.")
             return
         try:
             self.bot.unload_extension(extension)
         except Exception as e:
             await ctx.author.send(f"```py\n{traceback.format_exc()}\n```")
-            await ctx.send(f"{ctx.author}, failed to unload extension: {extension}. Check your DMs for more details.")
+            await ctx.send(f"{ctx.author} | Failed to unload extension: {extension}. Check your DMs for more details.")
             print(f"Failed to unload extension: {extension}", file=sys.stderr)
             traceback.print_exc()
         else:
-            await ctx.send(f"{ctx.author}, {extension} unloaded.")
+            await ctx.send(f"{ctx.author} | {extension} unloaded.")
 
     @commands.command(name="reload")
     async def reload_(self, ctx, *, extension: str=None):
@@ -65,7 +65,7 @@ class Owner:
         """
 
         if not extension:
-            await ctx.send(f"{ctx.author}, you must specify an extension to reload.")
+            await ctx.send(f"{ctx.author} | You must specify an extension to reload.")
             return
         try:
             self.bot.unload_extension(extension)
@@ -75,7 +75,7 @@ class Owner:
             print(f"Failed to reload extension: {extension}", file=sys.stderr)
             traceback.print_exc()
         else:
-            await ctx.send(f"{ctx.author}, {extension} reloaded.")
+            await ctx.send(f"{ctx.author} | {extension} reloaded.")
 
     @commands.command()
     async def die(self, ctx):
@@ -84,7 +84,7 @@ class Owner:
         """
 
         await self.bot.db.close()
-        await ctx.send(f"{ctx.author}, database connection closed, logging out now.")
+        await ctx.send(f"{ctx.author} | Database connection closed, logging out now.")
         await self.bot.logout()
 
     @commands.command()
@@ -94,7 +94,7 @@ class Owner:
         """
 
         if user.id in self.bot.blocked:
-            await ctx.send(f"{ctx.author}, {user} is already blocked, use {config.prefix}unblock <user> if you want to unblock them.")
+            await ctx.send(f"{ctx.author} | {user} is already blocked, use {config.prefix}unblock <user> if you want to unblock them.")
             return
 
         self.bot.blocked.append(user.id)
@@ -104,7 +104,7 @@ class Owner:
             await connection.execute(query, user.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{ctx.author}, {user} was blocked.")
+        await ctx.send(f"{ctx.author} | {user} was blocked.")
 
     @commands.command()
     async def unblock(self, ctx, user: discord.User):
@@ -113,7 +113,7 @@ class Owner:
         """
 
         if not user.id in self.bot.blocked:
-            await ctx.send(f"{ctx.author}, {user} isn't blocked, user {config.prefix}block <user> if you want to block them.")
+            await ctx.send(f"{ctx.author} | {user} isn't blocked, user {config.prefix}block <user> if you want to block them.")
             return
 
         self.bot.blocked.remove(user.id)
@@ -123,7 +123,7 @@ class Owner:
             await connection.execute(query, user.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{ctx.author}, {user} was unblocked.")
+        await ctx.send(f"{ctx.author} | {user} was unblocked.")
 
     @commands.command()
     async def killpet(self, ctx, user: discord.User):
@@ -133,7 +133,7 @@ class Owner:
 
         profile = await utils.get_profile(self.bot, user.id)
         if not profile:
-            await ctx.send(f"{ctx.author}, that user doesn't have a profile.")
+            await ctx.send(f"{ctx.author} | That user doesn't have a profile.")
             return
 
         pet = json.loads(profile["pet"])
@@ -146,4 +146,4 @@ class Owner:
             await connection.execute(query, json.dumps(dead_pet), user.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{ctx.author}, {user}'s pet is now dead.")
+        await ctx.send(f"{ctx.author} | {user}'s pet is now dead.")
