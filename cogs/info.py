@@ -75,4 +75,4 @@ class InfoCommands:
         Invite the bot to your server
         """
 
-        await ctx.send(f"https://discordapp.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=0&scope=bot")
+        await ctx.send(f"<https://discordapp.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=0&scope=bot>")
