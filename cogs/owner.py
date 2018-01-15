@@ -147,3 +147,18 @@ class Owner:
         await self.bot.db.release(connection)
 
         await ctx.send(f"{ctx.author} | {user}'s pet is now dead.")
+
+    @commands.command()
+    async def createpet(self, ctx, name: str, expansion: str, image: str):
+        pet = {
+            "image": image,
+            "nickname": name,
+            "name": name,
+            "age": 0,
+            "expansion": expansion,
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        }
+
+        await ctx.send(f"```json\n{json.dumps(pet, indent=4)}```")
