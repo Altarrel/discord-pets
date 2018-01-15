@@ -27,7 +27,7 @@ class DiscordPets(commands.Bot):
     def __init__(self, **kwargs):
         super().__init__(
             description=kwargs.pop("description"),
-            command_prefix=config.prefix
+            command_prefix=config.prefix,
             game=discord.Game(name=f"{config.prefix}help")
         )
 
@@ -36,12 +36,20 @@ class DiscordPets(commands.Bot):
         self.blocked = kwargs.pop("blocked")
         self.loop.create_task(self.load_all_extensions())
 
+    async def on_message(self, message):
+        if message.author.id in self.blocked:
+            return
+
+        await self.process_commands(message)
+
+
     async def load_all_extensions(self):
         await self.wait_until_ready()
         await asyncio.sleep(1)
         extensions = ("cogs.owner",
                       "cogs.pets",
-                      "cogs.error_handler"
+                      "cogs.error_handler",
+                      "cogs.info"
                       )
         for extension in extensions:
             try:

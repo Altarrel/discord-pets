@@ -3,6 +3,8 @@ from discord.ext import commands
 import sys
 import traceback
 
+import config
+
 def setup(bot):
     bot.add_cog(Owner(bot))
 
@@ -105,14 +107,14 @@ class Owner:
         Gives a user access to the bot again
         """
 
-        if user.id in self.bot.blocked:
+        if not user.id in self.bot.blocked:
             await ctx.send(f"{user} isn't blocked, user {config.prefix}block <user> if you want to block them.")
             return
 
         self.bot.blocked.remove(user.id)
         connection = await self.bot.db.acquire()
         async with connection.transaction():
-            query = """DELETE * FROM blocked WHERE id = $1"""
+            query = """DELETE FROM blocked WHERE id = $1;"""
             await connection.execute(query, user.id)
         await self.bot.db.release(connection)
 
