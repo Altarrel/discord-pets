@@ -67,3 +67,12 @@ class InfoCommands:
             " for the bot, you can [join the help server](https://discord.gg/ke6bp6r).")
 
         await ctx.send(embed=embed)
+
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def invite(self, ctx):
+        """
+        Invite the bot to your server
+        """
+
+        await ctx.send(f"https://discordapp.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=0&scope=bot")
