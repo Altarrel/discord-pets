@@ -22,6 +22,17 @@
             "health": 40
         },
 
+        "Jello": {
+            "image": "https://i.imgur.com/PO5dj0V.jpg",
+            "nickname": "Jello",
+            "name": "Jello",
+            "age": 0,
+            "expansion": "Altarrel's Animals",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        },
+
         "Lilo": {
             "image": "https://imgur.com/KrX8Wr6.jpg",
             "nickname": "Lilo",

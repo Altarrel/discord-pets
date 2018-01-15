@@ -151,14 +151,16 @@ class Owner:
     @commands.command()
     async def createpet(self, ctx, name: str, expansion: str, image: str):
         pet = {
-            "image": image,
-            "nickname": name,
-            "name": name,
-            "age": 0,
-            "expansion": expansion,
-            "saturation": 40,
-            "cleanliness": 40,
-            "health": 40
+            name: {
+                "image": image,
+                "nickname": name,
+                "name": name,
+                "age": 0,
+                "expansion": expansion,
+                "saturation": 40,
+                "cleanliness": 40,
+                "health": 40
+            }
         }
 
         await ctx.send(f"```json\n{json.dumps(pet, indent=4)}```")
