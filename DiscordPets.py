@@ -37,6 +37,7 @@ class DiscordPets(commands.Bot):
         self.loop.create_task(self.load_all_extensions())
 
     async def on_message(self, message):
+        # Stop certain users from using the bot
         if message.author.id in self.blocked:
             return
 
