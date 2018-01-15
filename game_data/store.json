@@ -13,6 +13,13 @@
         "amount": 1
     },
 
+    "Wipe": {
+        "restore_type": "cleanliness",
+        "restore_amount": 5,
+        "price": 50,
+        "amount": 1
+    },
+
     "Flea Treatment": {
         "restore_type": "cleanliness",
         "restore_amount": 10,
