@@ -4,6 +4,7 @@ import asyncio
 import asyncpg
 import sys
 import traceback
+import aiohttp
 
 import config
 
@@ -17,7 +18,7 @@ async def run():
 
     bot = DiscordPets(description=description, db=db, blocked=blocked)
     try:
-        await bot.start(config.token)
+        await bot.start(config.bot_token)
     except KeyboardInterrupt:
         await db.close()
         await bot.logout()
@@ -41,7 +42,35 @@ class DiscordPets(commands.Bot):
         if message.author.id in self.blocked:
             return
 
+        return
         await self.process_commands(message)
+
+    # Post guild count to https://discordbots.org/
+
+    async def on_ready(self):
+        print(f"Username: {self.user.name}\n"
+              f"ID: {self.user.id}\n")
+
+        headers = {'Authorization': config.dbl_token}
+        data = {'server_count': len(self.guilds)}
+        api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
+        async with aiohttp.ClientSession() as session:
+            await session.post(api_url, data=data, headers=headers)
+        print("Guild count posted to https://discordbots.org/")
+
+    async def on_guild_join(self, guild):
+        headers = {'Authorization': config.dbl_token}
+        data = {'server_count': len(self.guilds)}
+        api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
+        async with aiohttp.ClientSession() as session:
+            await session.post(api_url, data=data, headers=headers)
+
+    async def on_guild_remove(self, guild):
+        headers = {'Authorization': config.dbl_token}
+        data = {'server_count': len(self.guilds)}
+        api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
+        async with aiohttp.ClientSession() as session:
+            await session.post(api_url, data=data, headers=headers)
 
 
     async def load_all_extensions(self):
@@ -58,10 +87,6 @@ class DiscordPets(commands.Bot):
             except Exception as e:
                 print(f"Failed to load extension {extension}.", file=sys.stderr)
                 traceback.print_exc()
-
-    async def on_ready(self):
-        print(f"Username: {self.user.name}\n"
-              f"ID: {self.user.id}\n")
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(run())
