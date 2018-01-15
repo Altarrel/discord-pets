@@ -55,4 +55,7 @@ async def coinflip(bot, ctx):
             await connection.execute(query, winnings, ctx.author.id)
         await bot.db.release(connection)
 
+# async def gamble(bot, ctx):
+    
+
 all_minigames = (coinflip,)

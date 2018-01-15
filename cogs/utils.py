@@ -3,12 +3,24 @@ import random
 import discord
 import math
 import time
+import copy
 
 with open("./game_data/pets.json") as f:
     possible_pets = json.load(f)
 
-def pick_new_pet():
-    expansion, expansion_pets = random.choice(list(possible_pets.items()))
+async def get_profile(bot, user_id):
+    query = """SELECT * FROM users WHERE id = $1"""
+    profile = await bot.db.fetchrow(query, user_id)
+    return profile
+
+def pick_new_pet(previous_pet):
+    modified_possible_pets = copy.copy(possible_pets)
+
+    if previous_pet:
+        # Modify possible_pets to prevent the user from getting the same pet 2 times in a row.
+        del modified_possible_pets[previous_pet["expansion"]][previous_pet["name"]]
+
+    expansion, expansion_pets = random.choice(list(modified_possible_pets.items()))
     pet = random.choice(list(expansion_pets.values()))
     pet["birth_time"] = (time.time() / 60)
     return (expansion, pet)

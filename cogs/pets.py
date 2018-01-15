@@ -25,24 +25,19 @@ class Pets:
     def __init__(self, bot):
         self.bot = bot
 
-    async def get_profile(self, user_id):
-        query = """SELECT * FROM users WHERE id = $1"""
-        profile = await self.bot.db.fetchrow(query, user_id)
-        return profile
-
     @commands.command()
     async def start(self, ctx):
         """
         Get your first pet
         """
 
-        profile = await self.get_profile(ctx.author.id)
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if profile:
             await ctx.send(f"{ctx.author}, you already have a profile, use {ctx.prefix}hardreset "\
                 "if you want to delete it.")
             return
 
-        pet_expansion, new_pet = utils.pick_new_pet()
+        pet_expansion, new_pet = utils.pick_new_pet(None)
         new_pet["birth_time"] = int(time.time() / 60)
 
         connection = await self.bot.db.acquire()
@@ -55,7 +50,7 @@ class Pets:
         profile = {"pet": json.dumps(new_pet), "currency": 0, "graveyard": "[]"}
         stats_embed = utils.create_stats_embed(ctx.author.name, profile)
 
-        current_time = math.floor(time.time() / 60)
+        current_time = int(time.time() / 60)
         self.bot.last_interactions[ctx.author.id] = {
             "fed": current_time,
             "cleaned": current_time
@@ -70,7 +65,7 @@ class Pets:
         Delete your profile
         """
 
-        profile = await self.get_profile(ctx.author.id)
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if not profile:
             await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
@@ -103,7 +98,7 @@ class Pets:
         Check your stats
         """
 
-        profile = await self.get_profile(ctx.author.id)
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if not profile:
             await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
@@ -134,7 +129,7 @@ class Pets:
         Check your inventory
         """
 
-        profile = await self.get_profile(ctx.author.id)
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if not profile:
             await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
@@ -158,7 +153,7 @@ class Pets:
         Play a game to win pet coins
         """
 
-        profile = await self.get_profile(ctx.author.id)
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if not profile:
             await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
@@ -178,6 +173,7 @@ class Pets:
         """
         Items for your pet
         """
+
         embed = discord.Embed()
         for item in store:
             if store[item]["amount"] > 0:
@@ -190,7 +186,8 @@ class Pets:
         """
         Buy items for your pet
         """
-        profile = await self.get_profile(ctx.author.id)
+
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if not profile:
             await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
@@ -232,7 +229,7 @@ class Pets:
         """
         Feed your pet
         """
-        profile = await self.get_profile(ctx.author.id)
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if not profile:
             await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
@@ -315,7 +312,7 @@ class Pets:
         """
         Clean your pet
         """
-        profile = await self.get_profile(ctx.author.id)
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if not profile:
             await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
@@ -399,7 +396,7 @@ class Pets:
         Get a new pet
         """
 
-        profile = await self.get_profile(ctx.author.id)
+        profile = await utils.get_profile(self.bot, ctx.author.id)
         if not profile:
             await ctx.send(f"{ctx.author}, you don't have a profile, use {ctx.prefix}start to get one.")
             return
@@ -407,11 +404,11 @@ class Pets:
         pet = json.loads(profile["pet"])
 
         # Death check so you can only get a new pet if your current one is dead
-        if not pet["health"] <= 0 or not pet["age"] >= 14:
+        if pet["health"] > 0 and pet["age"] <= 14:
             await ctx.send(f"{ctx.author}, you can't get a new pet right now.")
             return
 
-        pet_expansion, new_pet = utils.pick_new_pet()
+        pet_expansion, new_pet = utils.pick_new_pet(pet)
         new_pet["birth_time"] = int(time.time() / 60)
 
         connection = await self.bot.db.acquire()
