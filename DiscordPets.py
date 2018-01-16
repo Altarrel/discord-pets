@@ -24,7 +24,7 @@ async def run():
 
     bot = DiscordPets(description=description, db=db, blocked=blocked)
     try:
-        await bot.start(config.bot_token)
+        await bot.start(config.BOT_TOKEN)
     except KeyboardInterrupt:
         await db.close()
         await bot.logout()
@@ -60,7 +60,7 @@ class DiscordPets(commands.Bot):
         if self.user.id == 360498777468960769:
             return
 
-        headers = {'Authorization': config.dbl_token}
+        headers = {'Authorization': config.DBL_TOKEN}
         data = {'server_count': len(self.guilds)}
         api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
         async with aiohttp.ClientSession() as session:
@@ -71,7 +71,7 @@ class DiscordPets(commands.Bot):
         if self.user.id == 360498777468960769:
             return
 
-        headers = {'Authorization': config.dbl_token}
+        headers = {'Authorization': config.DBL_TOKEN}
         data = {'server_count': len(self.guilds)}
         api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
         async with aiohttp.ClientSession() as session:
@@ -81,7 +81,7 @@ class DiscordPets(commands.Bot):
         if self.user.id == 360498777468960769:
             return
 
-        headers = {'Authorization': config.dbl_token}
+        headers = {'Authorization': config.DBL_TOKEN}
         data = {'server_count': len(self.guilds)}
         api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
         async with aiohttp.ClientSession() as session:
