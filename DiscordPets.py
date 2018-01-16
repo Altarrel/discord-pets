@@ -1,18 +1,24 @@
-import discord
-from discord.ext import commands
-import asyncio
-import asyncpg
-import sys
 import traceback
+import asyncio
+import sys
+
+from discord.ext import commands
 import aiohttp
+import discord
+import asyncpg
 
 import config
+
 
 async def run():
     description = "A bot written in Python by Altarrel"
     db = await asyncpg.create_pool(**config.credentials)
-    await db.execute("""CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, currency int, inventory text, pet text, graveyard text);""")
-    await db.execute("""CREATE TABLE IF NOT EXISTS blocked(id bigint);""")
+    await db.execute("""
+        CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, currency int, inventory text, pet text, graveyard text);
+    """)
+    await db.execute("""
+        CREATE TABLE IF NOT EXISTS blocked(id bigint);
+    """)
 
     blocked = await db.fetch("""SELECT * FROM blocked""")
 
@@ -22,6 +28,7 @@ async def run():
     except KeyboardInterrupt:
         await db.close()
         await bot.logout()
+
 
 class DiscordPets(commands.Bot):
     # I stole this from SourSpoon
@@ -80,7 +87,6 @@ class DiscordPets(commands.Bot):
         async with aiohttp.ClientSession() as session:
             await session.post(api_url, data=data, headers=headers)
 
-
     async def load_all_extensions(self):
         await self.wait_until_ready()
         await asyncio.sleep(1)
@@ -92,7 +98,7 @@ class DiscordPets(commands.Bot):
         for extension in extensions:
             try:
                 self.load_extension(extension)
-            except Exception as e:
+            except Exception:
                 print(f"Failed to load extension {extension}.", file=sys.stderr)
                 traceback.print_exc()
 

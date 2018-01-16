@@ -1,15 +1,14 @@
-import discord
-from discord.ext import commands
-import sys
 import traceback
-import json
 import copy
+import json
+import sys
 
-import config
+from discord.ext import commands
+import discord
+
 import cogs.utils as utils
+import config
 
-def setup(bot):
-    bot.add_cog(Owner(bot))
 
 class Owner:
     """Commands only for the bot owner"""
@@ -31,7 +30,7 @@ class Owner:
             return
         try:
             self.bot.load_extension(extension)
-        except Exception as e:
+        except Exception:
             await ctx.author.send(f"```py\n{traceback.format_exc()}\n```")
             await ctx.send(f"{ctx.author} | Failed to load extension: {extension}. Check your DMs for more details.")
             print(f"Failed to load extension: {extension}", file=sys.stderr)
@@ -50,7 +49,7 @@ class Owner:
             return
         try:
             self.bot.unload_extension(extension)
-        except Exception as e:
+        except Exception:
             await ctx.author.send(f"```py\n{traceback.format_exc()}\n```")
             await ctx.send(f"{ctx.author} | Failed to unload extension: {extension}. Check your DMs for more details.")
             print(f"Failed to unload extension: {extension}", file=sys.stderr)
@@ -70,7 +69,7 @@ class Owner:
         try:
             self.bot.unload_extension(extension)
             self.bot.load_extension(extension)
-        except Exception as e:
+        except Exception:
             await ctx.send(f"```py\n{traceback.format_exc()}\n```")
             print(f"Failed to reload extension: {extension}", file=sys.stderr)
             traceback.print_exc()
@@ -94,7 +93,8 @@ class Owner:
         """
 
         if user.id in self.bot.blocked:
-            await ctx.send(f"{ctx.author} | {user} is already blocked, use {config.prefix}unblock <user> if you want to unblock them.")
+            await ctx.send(f"{ctx.author} | {user} is already blocked, use {config.prefix}unblock <user> if you want"
+                           f" to unblock them.")
             return
 
         self.bot.blocked.append(user.id)
@@ -112,8 +112,9 @@ class Owner:
         Gives a user access to the bot again
         """
 
-        if not user.id in self.bot.blocked:
-            await ctx.send(f"{ctx.author} | {user} isn't blocked, user {config.prefix}block <user> if you want to block them.")
+        if user.id not in self.bot.blocked:
+            await ctx.send(f"{ctx.author} | {user} isn't blocked, user {config.prefix}block <user> if you want to"
+                           f" block them.")
             return
 
         self.bot.blocked.remove(user.id)
@@ -164,3 +165,7 @@ class Owner:
         }
 
         await ctx.send(f"```json\n{json.dumps(pet, indent=4)}```")
+
+
+def setup(bot):
+    bot.add_cog(Owner(bot))

@@ -1,9 +1,10 @@
-import json
 import random
-import discord
-import math
-import time
 import copy
+import json
+import time
+
+import discord
+
 
 with open("./game_data/pets.json") as f:
     possible_pets = json.load(f)
@@ -12,6 +13,7 @@ async def get_profile(bot, user_id):
     query = """SELECT * FROM users WHERE id = $1"""
     profile = await bot.db.fetchrow(query, user_id)
     return profile
+
 
 def pick_new_pet(previous_pet):
     modified_possible_pets = copy.copy(possible_pets)
@@ -23,7 +25,7 @@ def pick_new_pet(previous_pet):
     expansion, expansion_pets = random.choice(list(modified_possible_pets.items()))
     pet = random.choice(list(expansion_pets.values()))
     pet["birth_time"] = (time.time() / 60)
-    return (expansion, pet)
+    return expansion, pet
 
 conversions = {
     "saturation": {
@@ -63,12 +65,14 @@ conversions = {
     }
 }
 
+
 def convert(type, data):
     # data shouldn't be less than 0 or greater than 5
     # there are checks in the functions that raise and lower it
     rounded = int(data / 10)
     converted = conversions[type][rounded]
     return converted
+
 
 def age_convert(age):
     text = ""
@@ -83,6 +87,7 @@ def age_convert(age):
     elif age >= 14:
         text = "Dead"
     return text
+
 
 def create_stats_embed(author_name, profile):
     pet = json.loads(profile["pet"])
@@ -114,6 +119,7 @@ def create_stats_embed(author_name, profile):
 
     return embed
 
+
 def decay_stat(pet, stat_type, current_time, last_interactions):
     # Times are in floored minutes
     difference = current_time - last_interactions[stat_type]
@@ -135,6 +141,7 @@ def decay_stat(pet, stat_type, current_time, last_interactions):
     # Set all stats to 0 so they don't stay negative
     if pet[stat_type] < 0:
         pet[stat_type] = 0
+
 
 def decay_stats(pet, current_time, last_interactions):
     # Times are in floored minutes
@@ -179,8 +186,9 @@ def decay_stats(pet, current_time, last_interactions):
 
 
 def possessive(name):
-    return (name + ("'" if name.endswith("s") else "'s"))
+    return name + ("'" if name.endswith("s") else "'s")
+
 
 def a_or_an(text):
     vowels = ("a", "e", "i", "o", "u", "A", "E", "I", "O", "U")
-    return ("an" if text[0] in vowels and text != "user" else "a")
+    return "an" if text[0] in vowels and text != "user" else "a"

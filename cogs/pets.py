@@ -1,21 +1,20 @@
-import discord
-from discord.ext import commands
-import json
-import time
-import math
 import asyncio
 import random
-from fuzzywuzzy import process as fuzz_process
+import json
+import time
 import copy
+
+from fuzzywuzzy import process as fuzz_process
+from discord.ext import commands
+import discord
 
 import cogs.utils as utils
 from game_data.minigames import all_minigames
 
+
 with open("./game_data/store.json", "r") as f:
     store = json.load(f)
 
-def setup(bot):
-    bot.add_cog(Pets(bot))
 
 class Pets:
     """
@@ -33,8 +32,8 @@ class Pets:
 
         profile = await utils.get_profile(self.bot, ctx.author.id)
         if profile:
-            await ctx.send(f"{ctx.author} | You already have a profile, use {ctx.prefix}hardreset "\
-                "if you want to delete it.")
+            await ctx.send(f"{ctx.author} | You already have a profile, use {ctx.prefix}hardreset "
+                           f"if you want to delete it.")
             return
 
         pet_expansion, new_pet = utils.pick_new_pet(None)
@@ -56,7 +55,8 @@ class Pets:
             "cleaned": current_time
         }
 
-        await ctx.send(f"{ctx.author} | Your first pet is **{new_pet['name']}** from the **{pet_expansion}** expansion.", embed=stats_embed)
+        await ctx.send(f"{ctx.author} | Your first pet is **{new_pet['name']}** from the **{pet_expansion}**"
+                       f" expansion.", embed=stats_embed)
 
     @commands.command()
     @commands.cooldown(1, 604800, commands.BucketType.user)
@@ -70,8 +70,10 @@ class Pets:
             await ctx.send(f"{ctx.author} | you don't have a profile, use {ctx.prefix}start to get one.")
             return
 
-        await ctx.send(f"{ctx.author} | This will delete your profile. You will lose your pet, currency, and inventory. "\
-            f"You will be able to use the bot again with {ctx.prefix}start, but you will be starting over. Say CONFIRM to confirm the deletion of your profile.")
+        await ctx.send(f"{ctx.author} | This will delete your profile. You will lose your pet, currency, and inventory."
+                       f" You will be able to use the bot again with {ctx.prefix}start, but you will be starting over."
+                       f" Say CONFIRM to confirm the deletion of your profile.")
+
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
 
@@ -104,7 +106,6 @@ class Pets:
             return
 
         pet = json.loads(profile["pet"])
-        graveyard = json.loads(profile["graveyard"])
         current_time = int(time.time() / 60)
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
@@ -177,7 +178,9 @@ class Pets:
         embed = discord.Embed(title=f"{ctx.author} | Store")
         for item in store:
             if store[item]["amount"] > 0:
-                embed.add_field(name=item, value=f"Price: {store[item]['price']}\nStat Restore Type: {store[item]['restore_type'].title()}\nStat Restore Amount: {store[item]['restore_amount']}")
+                embed.add_field(name=item, value=f"Price: {store[item]['price']}\nStat Restore Type:"
+                                                 f" {store[item]['restore_type'].title()}\nStat Restore Amount:"
+                                                 f" {store[item]['restore_amount']}")
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -304,7 +307,8 @@ class Pets:
             await connection.execute(query, json.dumps(inventory), json.dumps(decayed_stats), ctx.author.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{ctx.author} | {utils.possessive(pet['nickname'])} saturation was increased by {fuzzy_item['restore_amount']}.")
+        await ctx.send(f"{ctx.author} | {utils.possessive(pet['nickname'])} saturation was increased by "
+                       f"{fuzzy_item['restore_amount']}.")
 
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -387,7 +391,8 @@ class Pets:
             await connection.execute(query, json.dumps(inventory), json.dumps(decayed_stats), ctx.author.id)
         await self.bot.db.release(connection)
 
-        await ctx.send(f"{ctx.author} | {utils.possessive(pet['nickname'])} cleanliness was increased by {fuzzy_item['restore_amount']}.")
+        await ctx.send(f"{ctx.author} | {utils.possessive(pet['nickname'])} cleanliness was increased by "
+                       f"{fuzzy_item['restore_amount']}.")
 
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -426,4 +431,9 @@ class Pets:
             "cleaned": current_time
         }
 
-        await ctx.send(f"{ctx.author} | Your new pet is **{new_pet['name']}** from the **{pet_expansion}** expansion.", embed=stats_embed)
+        await ctx.send(f"{ctx.author} | Your new pet is **{new_pet['name']}** from the **{pet_expansion}** expansion.",
+                       embed=stats_embed)
+
+
+def setup(bot):
+    bot.add_cog(Pets(bot))
