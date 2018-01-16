@@ -142,6 +142,8 @@ def decay_stat(pet, stat_type, current_time, last_interactions):
     if pet[stat_type] < 0:
         pet[stat_type] = 0
 
+    return pet
+
 
 def decay_stats(pet, current_time, last_interactions):
     # Times are in floored minutes
@@ -182,6 +184,7 @@ def decay_stats(pet, current_time, last_interactions):
         pet["saturation"] = 0
     if pet["cleanliness"] < 0:
         pet["cleanliness"] = 0
+        
     return pet
 
 

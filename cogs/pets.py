@@ -255,8 +255,6 @@ class Pets:
 
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
-            # Only decay one stat so that stats aren't decreased an extra time
-            decayed_stats = utils.decay_stat(pet, "saturation", current_time, last_interactions)
         except KeyError:
             decayed_stats = pet
             self.bot.last_interactions[ctx.author.id] = {
@@ -264,6 +262,8 @@ class Pets:
                 "cleanliness": current_time
             }
         else:
+            # Only decay one stat so that stats aren't decreased an extra time
+            decayed_stats = utils.decay_stat(pet, "saturation", current_time, last_interactions)
             self.bot.last_interactions[ctx.author.id]["saturation"] = current_time
 
         # Check to make sure their pet didn't die
@@ -340,8 +340,6 @@ class Pets:
 
         try:
             last_interactions = self.bot.last_interactions[ctx.author.id]
-            # Only decay one stat so that saturation isn't decreased an extra time
-            decayed_stats = utils.decay_stat(pet, "cleanliness", current_time, last_interactions)
         except KeyError:
             decayed_stats = pet
             self.bot.last_interactions[ctx.author.id] = {
@@ -349,6 +347,8 @@ class Pets:
                 "cleanliness": current_time,
             }
         else:
+            # Only decay one stat so that saturation isn't decreased an extra time
+            decayed_stats = utils.decay_stat(pet, "cleanliness", current_time, last_interactions)
             self.bot.last_interactions[ctx.author.id]["cleanliness"] = current_time
 
         # Check to make sure their pet didn't die
