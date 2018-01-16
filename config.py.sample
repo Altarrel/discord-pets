@@ -1,0 +1,4 @@
+bot_token = "APP TOKEN"
+dbl_token = "DISCORD BOTS LIST TOKEN"
+prefix = "dp!"
+credentials = {"user": "USERNAME", "password": "PASSWORD", "database": "DATABASE", "host": "127.0.0.1"}
