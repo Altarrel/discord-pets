@@ -57,7 +57,7 @@ class DiscordPets(commands.Bot):
         print(f"Username: {self.user.name}\n"
               f"ID: {self.user.id}\n")
 
-        if self.user.id == 360498777468960769:
+        if self.user.id in config.TEST_IDS:
             return
 
         headers = {'Authorization': config.DBL_TOKEN}
@@ -68,7 +68,7 @@ class DiscordPets(commands.Bot):
         print("Guild count posted to https://discordbots.org/")
 
     async def on_guild_join(self, guild):
-        if self.user.id == 360498777468960769:
+        if self.user.id in config.TEST_IDS:
             return
 
         headers = {'Authorization': config.DBL_TOKEN}
@@ -78,7 +78,7 @@ class DiscordPets(commands.Bot):
             await session.post(api_url, data=data, headers=headers)
 
     async def on_guild_remove(self, guild):
-        if self.user.id == 360498777468960769:
+        if self.user.id in config.TEST_IDS:
             return
 
         headers = {'Authorization': config.DBL_TOKEN}
