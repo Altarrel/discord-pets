@@ -5,3 +5,5 @@ Scripts/
 pyvenv.cfg
 pip-selfcheck.json
 test.py
+config.py
+\.idea/
