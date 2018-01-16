@@ -12,7 +12,7 @@ import config
 
 async def run():
     description = "A bot written in Python by Altarrel"
-    db = await asyncpg.create_pool(**config.credentials)
+    db = await asyncpg.create_pool(**config.POSTGRES_CREDENTIALS)
     await db.execute("""
         CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, currency int, inventory text, pet text, graveyard text);
     """)
