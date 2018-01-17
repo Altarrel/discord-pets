@@ -37,6 +37,8 @@ class InfoCommands:
             "- help -> Shows this message.\n" \
             "- invite -> Invite the bot to your server.\n" \
             "- info -> Gives some info about the bot.\n" \
+            "- expansions -> Lists all expansions.\n" \
+            "- pets [expansion] -> Lists all pets in specified expansion.\n" \
             "# Items\n" \
             "- store -> List items in the store.\n" \
             "- inventory -> List items in your inventory.\n" \

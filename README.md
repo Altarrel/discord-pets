@@ -10,6 +10,8 @@ If you have an issue with or suggestion for the bot, please [join the help serve
 - help -> Lists the commands.
 - invite -> Gives you the bot invite link.
 - info -> Give info about the bot's background and usage.
+- expansions -> Lists all expansions (group of pets).
+- pets [expansion] -> Lists all pets in specified expansion.
 
 ## Items
 - store -> Lists items in the store.
