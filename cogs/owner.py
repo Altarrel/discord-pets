@@ -185,10 +185,5 @@ class Owner:
         await self.bot.db.release(connection)
         await ctx.send(f"{ctx.author} | {user}'s currency was set to {amount}.")
 
-    @commands.command()
-    async def finduser(self, ctx, *, username: str):
-        user = discord.utils.get(self.bot.users, name=username)
-        await ctx.send(str(user))
-
 def setup(bot):
     bot.add_cog(Owner(bot))
