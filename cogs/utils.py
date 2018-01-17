@@ -7,7 +7,7 @@ import discord
 
 
 with open("./game_data/pets.json") as f:
-    possible_pets = json.load(f)
+    all_pets = json.load(f)
 
 async def get_profile(bot, user_id):
     query = """SELECT * FROM users WHERE id = $1"""
@@ -16,13 +16,13 @@ async def get_profile(bot, user_id):
 
 
 def pick_new_pet(previous_pet):
-    modified_possible_pets = copy.copy(possible_pets)
+    modified_pets = copy.copy(all_pets)
 
     if previous_pet:
-        # Modify possible_pets to prevent the user from getting the same pet 2 times in a row.
-        del modified_possible_pets[previous_pet["expansion"]][previous_pet["name"]]
+        # Modify all_pets to prevent the user from getting the same pet 2 times in a row.
+        del modified_pets[previous_pet["expansion"]][previous_pet["name"]]
 
-    expansion, expansion_pets = random.choice(list(modified_possible_pets.items()))
+    expansion, expansion_pets = random.choice(list(modified_pets.items()))
     pet = random.choice(list(expansion_pets.values()))
     pet["birth_time"] = (time.time() / 60)
     return expansion, pet

@@ -39,6 +39,8 @@ class DiscordPets(commands.Bot):
             game=discord.Game(name=f"{config.prefix}help")
         )
 
+        # Get rid of default help command so I can replace it with my trash one
+        self.remove_command("help")
         self.last_interactions = {}
         self.db = kwargs.pop("db")
         self.blocked = kwargs.pop("blocked")

@@ -1,6 +1,11 @@
 from discord.ext import commands
 import discord
 
+from fuzzywuzzy import process as fuzz_process
+import json
+
+with open("./game_data/pets.json") as f:
+    all_pets = json.load(f)
 
 class InfoCommands:
     """
@@ -8,7 +13,6 @@ class InfoCommands:
     """
 
     def __init__(self, bot):
-        bot.remove_command("help")
         self.bot = bot
 
     @commands.command()
@@ -77,13 +81,54 @@ class InfoCommands:
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def invite(self, ctx):
-        """
-        Invite the bot to your server
+        """Invite the bot to your server
         """
 
         await ctx.send(f"{ctx.author} | <https://discordapp.com/api/"
                        f"oauth2/authorize?client_id={self.bot.user.id}&permissions=0&scope=bot>")
 
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def expansions(self, ctx):
+        """Lists all expansions
+        """
+
+        expansion_list = "```md\n"
+        for expansion in all_pets.keys():
+            expansion_list += f"- {expansion}\n"
+        expansion_list += "```"
+        await ctx.send(expansion_list)
+
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def pets(self, ctx, *, expansion: str):
+        """Lists pets from an expansion
+        """
+
+        extract_expansion = fuzz_process.extractOne(expansion, all_pets.keys(), score_cutoff=70)
+        try:
+            fuzzy_expansion = extract_expansion[0]
+        except TypeError:
+            # In case it returns None and raises NoneType is not subscriptable
+            fuzzy_expansion = None
+
+        if fuzzy_expansion is None:
+            await ctx.send(f"{ctx.author} | That expansion doesn't exist.")
+            return
+        pet_list = f"```md\n# Pets in {fuzzy_expansion}\n"
+        for pet in all_pets[fuzzy_expansion].keys():
+            pet_list += f"- {pet}\n"
+        pet_list += "```"
+        await ctx.send(pet_list)
+
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def view(self, ctx, *, pet: str):
+        """Shows you the picture of a pet
+        """
+
+        extract_pet = fuzz_process.extractOne(pet, all_pets.items(), score_cutoff=70)
+        print(extract_pet)
 
 def setup(bot):
     bot.add_cog(InfoCommands(bot))

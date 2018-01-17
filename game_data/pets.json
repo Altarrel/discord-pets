@@ -54,5 +54,96 @@
             "cleanliness": 40,
             "health": 40
         }
+    },
+
+
+    "Arctic": {
+        "Snowy Owl": {
+            "image": "https://i.imgur.com/52KlEhT.jpg",
+            "nickname": "Snowy Owl",
+            "name": "Snowy Owl",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        },
+
+        "Orca": {
+            "image": "https://i.imgur.com/ECgt7Z5.jpg",
+            "nickname": "Orca",
+            "name": "Orca",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        },
+
+        "Ram": {
+            "image": "https://i.imgur.com/EGf1ppV.jpg",
+            "nickname": "Ram",
+            "name": "Ram",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        },
+
+        "Arctic Fox": {
+            "image": "https://i.imgur.com/6tLpivC.jpg",
+            "nickname": "Arctic Fox",
+            "name": "Arctic Fox",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        },
+
+        "Caribou": {
+            "image": "https://i.imgur.com/n0HIXOU.jpg",
+            "nickname": "Caribou",
+            "name": "Caribou",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        },
+
+        "Penguin": {
+            "image": "https://i.imgur.com/UyzZ0Nj.jpg",
+            "nickname": "Penguin",
+            "name": "Penguin",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        },
+
+        "Puffin": {
+            "image": "https://i.imgur.com/OIGqo6A.jpg",
+            "nickname": "Puffin",
+            "name": "Puffin",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        },
+
+        "Walrus": {
+            "image": "https://i.imgur.com/e9N89Al.jpg",
+            "nickname": "Walrus",
+            "name": "Walrus",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        }
     }
 }
