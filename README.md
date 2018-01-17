@@ -4,7 +4,7 @@ Discord Pets is a Discord bot that allows users to take care of a virtual pet.
 # Invite
 You can add the bot to your server [with this link](https://discordapp.com/api/oauth2/authorize?client_id=399237341652320278&permissions=0&scope=bot).
 # Contact
-If you have an issue with the or suggestion for the bot, please [join the help server](https://discord.gg/ke6bp6r).
+If you have an issue with or suggestion for the bot, please [join the help server](https://discord.gg/ke6bp6r).
 ---
 # Commands
 ## Utility
