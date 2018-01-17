@@ -121,14 +121,14 @@ class InfoCommands:
         pet_list += "```"
         await ctx.send(pet_list)
 
-    @commands.command()
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    async def view(self, ctx, *, pet: str):
-        """Shows you the picture of a pet
-        """
+    # @commands.command()
+    # @commands.cooldown(1, 5, commands.BucketType.user)
+    # async def view(self, ctx, *, pet: str):
+    #     """Shows you the picture of a pet
+    #     """
 
-        extract_pet = fuzz_process.extractOne(pet, all_pets.items(), score_cutoff=70)
-        print(extract_pet)
+    #     extract_pet = fuzz_process.extractOne(pet, all_pets.items(), score_cutoff=70)
+    #     print(extract_pet)
 
 def setup(bot):
     bot.add_cog(InfoCommands(bot))
