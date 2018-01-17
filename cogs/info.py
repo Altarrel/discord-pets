@@ -8,7 +8,6 @@ class InfoCommands:
     """
 
     def __init__(self, bot):
-        bot.remove_command("help")
         self.bot = bot
 
     @commands.command()
