@@ -106,7 +106,8 @@ def create_stats_embed(author_name, profile):
     embed.add_field(name="Nickname", value=pet["nickname"])
     embed.add_field(name="Age", value=age)
 
-    if pet["health"] > 0 or pet["age"] >= 14:
+    # Alive check
+    if pet["health"] > 0 and pet["age"] < 14:
         embed.add_field(name="Saturation", value=saturation)
         embed.add_field(name="Cleanliness", value=cleanliness)
         embed.add_field(name="Health", value=health)
@@ -131,7 +132,7 @@ def decay_stat(pet, stat_type, current_time, last_interactions):
         pet[stat_type] -= subtract
     else:
         # Reduce their stat by 1 for every 10 min since they have fed their pet
-        subtract = int(difference / 1)
+        subtract = int(difference / 10)
         pet[stat_type] -= subtract
 
     # If stat become negative, remove the amount less than 0 from health
@@ -161,14 +162,14 @@ def decay_stats(pet, current_time, last_interactions):
         pet["saturation"] -= subtract
     else:
         # Reduce their stat by 1 for every 10 min since they have fed their pet
-        subtract = int(fed_difference / 1)
+        subtract = int(fed_difference / 10)
         pet["saturation"] -= subtract
 
     if (cleaned_difference / 60) >= 4:
         subtract = int(cleaned_difference / 30)
         pet["cleanliness"] -= subtract
     else:
-        subtract = int(cleaned_difference / 1)
+        subtract = int(cleaned_difference / 10)
         pet["cleanliness"] -= subtract
 
     # If stats become negative, remove the amount less than 0 from health

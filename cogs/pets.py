@@ -407,8 +407,8 @@ class Pets:
 
         pet = json.loads(profile["pet"])
 
-        # Death check so you can only get a new pet if your current one is dead
-        if pet["health"] > 0 and pet["age"] <= 14:
+        # Alive check so you can only get a new pet if your current one is dead
+        if pet["health"] > 0 and pet["age"] < 14:
             await ctx.send(f"{ctx.author} | You can't get a new pet right now.")
             return
 
