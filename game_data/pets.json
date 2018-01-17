@@ -54,5 +54,19 @@
             "cleanliness": 40,
             "health": 40
         }
+    },
+
+
+    "Arctic": {
+        "Polar Bear": {
+            "image": "https://i.imgur.com/0XZPuvw.jpg",
+            "nickname": "Polar Bear",
+            "name": "Polar Bear",
+            "age": 0,
+            "expansion": "Arctic",
+            "saturation": 40,
+            "cleanliness": 40,
+            "health": 40
+        }
     }
 }
