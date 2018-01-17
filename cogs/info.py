@@ -57,7 +57,8 @@ class InfoCommands:
         Gives some info about the bot
         """
 
-        embed = discord.Embed(title="Info", description=f"{self.bot.user.mention} allows you to"
+        embed = discord.Embed(title="Info")
+        embed.add_field(name="Background", value=f"{self.bot.user.mention} allows you to"
                                                         f" take care of a virtual pet in Discord.\nIt was made by "
                                                         f"Altarrel#1219 using the discord.py wrapper for the Discord"
                                                         f" API.\nIt is hosted on a Scaleway C1 VPS and utilizes PM2 to"
@@ -66,6 +67,10 @@ class InfoCommands:
                                                         f" in contact with Altarrel, or have any issues with or"
                                                         f" suggestions for the bot, you can [join the help server]"
                                                         f"(https://discord.gg/ke6bp6r).")
+        
+        embed.add_field(name="Usage", value="All of the bot's commands have a 5 second cooldown to prevent spam.\n"
+                                            "The bot will not notify you of this, your message will simply be ignored.\n"
+                                            "For longer cooldowns, such as the 1 week on hardreset, the bot will notify you.")
 
         await ctx.send(embed=embed)
 

@@ -70,7 +70,8 @@ class Owner:
             self.bot.unload_extension(extension)
             self.bot.load_extension(extension)
         except Exception:
-            await ctx.send(f"```py\n{traceback.format_exc()}\n```")
+            await ctx.author.send(f"```py\n{traceback.format_exc()}\n```")
+            await ctx.send(f"{ctx.author} | Failed to reload extension: {extension}. Check your DMs for more details.")
             print(f"Failed to reload extension: {extension}", file=sys.stderr)
             traceback.print_exc()
         else:
@@ -166,6 +167,23 @@ class Owner:
 
         await ctx.send(f"```json\n{json.dumps(pet, indent=4)}```")
 
+    @commands.command()
+    async def setcurrency(self, ctx, user: discord.User, amount: int):
+        """
+        Sets a user's currency to the specified amount
+        """
+
+        profile = await utils.get_profile(self.bot, user.id)
+        if not profile:
+            await ctx.send(f"{ctx.author} | That user doesn't have a profile.")
+            return
+
+        connection = await self.bot.db.acquire()
+        async with connection.transaction():
+            query = """UPDATE users SET currency = $1 WHERE id = $2;"""
+            await connection.execute(query, amount, ctx.author.id)
+        await self.bot.db.release(connection)
+        await ctx.send(f"{ctx.author} | {user}'s currency was set to {amount}.")
 
 def setup(bot):
     bot.add_cog(Owner(bot))
