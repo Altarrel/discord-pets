@@ -50,8 +50,6 @@ class DiscordPets(commands.Bot):
         # Stop certain users and bots from using the bot
         if message.author.bot or message.author.id in self.blocked:
             return
-        if self.user.id in config.TEST_IDS and not self.is_owner(message.author):
-            return
             
         await self.process_commands(message)
 
