@@ -55,7 +55,7 @@ async def dice(bot, ctx):
         await ctx.send(f"{ctx.author} | \U0001f626 You guessed incorrectly! The die landed on {roll}.")
         return
 
-    winnings = random.randint(15, 30)
+    winnings = random.randint(20, 40)
     await ctx.send(f"{ctx.author} | \U0001f389 You guessed correctly! The die landed on {roll}. You won {winnings} coins.")
     connection = await bot.db.acquire()
     async with connection.transaction():
