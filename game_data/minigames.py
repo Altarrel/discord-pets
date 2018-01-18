@@ -4,7 +4,7 @@ import random
 import discord
 
 async def coinflip(bot, ctx):
-    await ctx.send(f"{ctx.author} | Guess whether the coin will land on heads or tails.")
+    await ctx.send(f"{ctx.author} | <:coinflip:403382619531902976> Guess whether the coin will land on heads or tails.")
     def check(m):
         return m.author == ctx.author and m.channel == ctx.channel and m.content.lower() in ("h", "heads", "t", "tails")
     try:
