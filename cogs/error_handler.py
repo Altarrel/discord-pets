@@ -16,7 +16,7 @@ class ErrorHandler:
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f"{ctx.author}, you must provide {utils.a_or_an(error.param.name)} {error.param.name}.")
         elif isinstance(error, commands.CommandOnCooldown):
-            if ctx.command.name != "hardreset":
+            if ctx.command.name != "start":
                 return
             await ctx.send(f"{ctx.author}, you can use that command again in {error.retry_after:.2f} seconds.")
         elif isinstance(error, commands.NotOwner):
