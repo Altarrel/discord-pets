@@ -25,6 +25,7 @@ class Pets:
         self.bot = bot
 
     @commands.command()
+    @commands.cooldown(1, 604800, commands.BucketType.user)
     async def start(self, ctx):
         """
         Get your first pet
@@ -34,6 +35,7 @@ class Pets:
         if profile:
             await ctx.send(f"{ctx.author} | You already have a profile, use {ctx.prefix}hardreset "
                            f"if you want to delete it.")
+            await self.bot.reset_cooldown(ctx)
             return
 
         pet_expansion, new_pet = utils.pick_new_pet(None)
@@ -59,7 +61,7 @@ class Pets:
                        f" expansion.", embed=stats_embed)
 
     @commands.command()
-    @commands.cooldown(1, 604800, commands.BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def hardreset(self, ctx):
         """
         Delete your profile

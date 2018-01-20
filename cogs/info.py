@@ -76,7 +76,7 @@ class InfoCommands:
         
         embed.add_field(name="Usage", value="All of the bot's commands have a 5 second cooldown to prevent spam.\n"
                                             "The bot will not notify you of this, your message will simply be ignored.\n"
-                                            "For longer cooldowns, such as the 1 week on hardreset, the bot will notify you.")
+                                            "For longer cooldowns, such as the 1 week on start, the bot will notify you.")
 
         await ctx.send(embed=embed)
 
