@@ -406,22 +406,34 @@ class Pets:
             return
 
         pet = json.loads(profile["pet"])
+        current_time = int(time.time() / 60)
+        try:
+            last_interactions = self.bot.last_interactions[ctx.author.id]
+            decayed_stats = utils.decay_stats(pet, current_time, last_interactions)
+        except KeyError:
+            decayed_stats = pet
+            self.bot.last_interactions[ctx.author.id] = {
+                "saturation": current_time,
+                "cleanliness": current_time,
+            }
 
         # Alive check so you can only get a new pet if your current one is dead
-        if pet["health"] > 0 and pet["age"] < 14:
+        if decayed_stats["health"] > 0 and decayed_stats["age"] < 14:
             await ctx.send(f"{ctx.author} | You can't get a new pet right now.")
             return
 
         pet_expansion, new_pet = utils.pick_new_pet(pet)
         new_pet["birth_time"] = int(time.time() / 60)
 
+        graveyard = json.loads(profile["graveyard"])
+        graveyard.append(decayed_stats)
         connection = await self.bot.db.acquire()
         async with connection.transaction():
-            query = """UPDATE users SET pet = $1 WHERE id = $2"""
-            await connection.execute(query, json.dumps(new_pet), ctx.author.id)
+            query = """UPDATE users SET pet = $1, graveyard = $2 WHERE id = $3"""
+            await connection.execute(query, json.dumps(new_pet), json.dumps(graveyard), ctx.author.id)
         await self.bot.db.release(connection)
 
-        profile = {"pet": json.dumps(new_pet), "currency": 0, "graveyard": "[]"}
+        profile = {"pet": json.dumps(new_pet), "currency": 0, "graveyard": json.dumps(graveyard)}
         stats_embed = utils.create_stats_embed(ctx.author.name, profile)
 
         current_time = int(time.time() / 60)

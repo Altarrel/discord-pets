@@ -153,6 +153,8 @@ def decay_stats(pet, current_time, last_interactions):
 
     # age_difference will be in floored days
     age_days = int((current_time - pet["birth_time"]) / 1440)
+    if age_days > 14:
+        age_days = 14
     pet["age"] = age_days
 
     # Less stat decay if they haven't been online in a while, maybe they were asleep
