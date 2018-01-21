@@ -148,8 +148,8 @@ def decay_stat(pet, stat_type, current_time, last_interactions):
 
 def decay_stats(pet, current_time, last_interactions):
     # Times are in floored minutes
-    fed_difference = current_time - last_interactions["saturation"]
-    cleaned_difference = current_time - last_interactions["cleanliness"]
+    saturation_difference = current_time - last_interactions["saturation"]
+    cleanliness_difference = current_time - last_interactions["cleanliness"]
 
     # age_difference will be in floored days
     age_days = int((current_time - pet["birth_time"]) / 1440)
@@ -158,20 +158,20 @@ def decay_stats(pet, current_time, last_interactions):
     pet["age"] = age_days
 
     # Less stat decay if they haven't been online in a while, maybe they were asleep
-    if (fed_difference / 60) >= 4:
+    if (saturation_difference / 60) >= 4:
         # Reduce their stat by 1 for every 30 min since they have fed their pet
-        subtract = int(fed_difference / 30)
+        subtract = int(saturation_difference / 30)
         pet["saturation"] -= subtract
     else:
         # Reduce their stat by 1 for every 10 min since they have fed their pet
-        subtract = int(fed_difference / 10)
+        subtract = int(saturation_difference / 10)
         pet["saturation"] -= subtract
 
-    if (cleaned_difference / 60) >= 4:
-        subtract = int(cleaned_difference / 30)
+    if (cleanliness_difference / 60) >= 4:
+        subtract = int(cleanliness_difference / 30)
         pet["cleanliness"] -= subtract
     else:
-        subtract = int(cleaned_difference / 10)
+        subtract = int(cleanliness_difference / 10)
         pet["cleanliness"] -= subtract
 
     # If stats become negative, remove the amount less than 0 from health
