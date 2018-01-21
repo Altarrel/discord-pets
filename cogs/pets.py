@@ -52,8 +52,8 @@ class Pets:
 
         current_time = int(time.time() / 60)
         self.bot.last_interactions[ctx.author.id] = {
-            "fed": current_time,
-            "cleaned": current_time
+            "saturation": current_time,
+            "cleanliness": current_time
         }
 
         await ctx.send(f"{ctx.author} | Your first pet is **{new_pet['name']}** from the **{pet_expansion}**"
