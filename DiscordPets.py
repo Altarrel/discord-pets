@@ -47,6 +47,8 @@ class DiscordPets(commands.Bot):
         self.loop.create_task(self.load_all_extensions())
 
     async def on_message(self, message):
+        await self.wait_until_ready()
+        await asyncio.sleep(1)
         # Stop certain users and bots from using the bot
         if message.author.bot or message.author.id in self.blocked:
             return
