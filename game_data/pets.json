@@ -57,6 +57,7 @@
     },
 
 
+
     "Arctic": {
         "Snowy Owl": {
             "image": "https://i.imgur.com/52KlEhT.jpg",
@@ -145,5 +146,107 @@
             "cleanliness": 40,
             "health": 40
         }
+    },
+
+
+    "Jungle": {
+        "Lemur": {
+        "image": "https://i.imgur.com/KGCbUm0.jpg",
+        "nickname": "Lemur",
+        "name": "Lemur",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    },
+
+        "Baboon": {
+        "image": "https://i.imgur.com/1j0UlwG.jpg",
+        "nickname": "Baboon",
+        "name": "Baboon",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    },
+
+        "Lion": {
+        "image": "https://i.imgur.com/BPhnKIN.jpg",
+        "nickname": "Lion",
+        "name": "Lion",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    },
+
+        "Gorilla": {
+        "image": "https://i.imgur.com/OjuCuim.jpg",
+        "nickname": "Gorilla",
+        "name": "Gorilla",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    },
+
+        "Leopard": {
+        "image": "https://i.imgur.com/slVkxH3.jpg",
+        "nickname": "Leopard",
+        "name": "Leopard",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    },
+
+        "Chameleon": {
+        "image": "https://i.imgur.com/aTBqUq1.jpg",
+        "nickname": "Chameleon",
+        "name": "Chameleon",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    },
+
+        "Tiger": {
+        "image": "https://i.imgur.com/jHuKD4a.jpg",
+        "nickname": "Tiger",
+        "name": "Tiger",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    },
+
+        "Parrot": {
+        "image": "https://i.imgur.com/9jldPCT.jpg",
+        "nickname": "Parrot",
+        "name": "Parrot",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    },
+
+        "Python": {
+        "image": "https://i.imgur.com/S3ycKSq.jpg",
+        "nickname": "Python",
+        "name": "Python",
+        "age": 0,
+        "expansion": "Jungle",
+        "saturation": 40,
+        "cleanliness": 40,
+        "health": 40
+    }
     }
 }
