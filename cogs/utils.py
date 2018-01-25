@@ -16,7 +16,8 @@ async def get_profile(bot, user_id):
 
 
 def pick_new_pet(previous_pet):
-    modified_pets = copy.copy(all_pets)
+    # Copy the dict to modify it
+    modified_pets = dict(all_pets)
 
     if previous_pet:
         # Modify all_pets to prevent the user from getting the same pet 2 times in a row.

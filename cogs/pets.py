@@ -44,7 +44,7 @@ class Pets:
         async with connection.transaction():
             query = """INSERT INTO users (id, currency, inventory, pet, graveyard)
                 VALUES ($1, $2, $3, $4, $5);"""
-            await connection.execute(query, ctx.author.id, 0, "{}", json.dumps(new_pet), "{}")
+            await connection.execute(query, ctx.author.id, 0, "{}", json.dumps(new_pet), "[]")
         await self.bot.db.release(connection)
 
         profile = {"pet": json.dumps(new_pet), "currency": 0, "graveyard": "[]"}
@@ -428,6 +428,9 @@ class Pets:
         new_pet["birth_time"] = int(time.time() / 60)
 
         graveyard = json.loads(profile["graveyard"])
+        # Accidentally had them as a dict, just in case the user has old data
+        if isinstance(graveyard, dict):
+            graveyard = []
         graveyard.append(decayed_stats)
         connection = await self.bot.db.acquire()
         async with connection.transaction():
