@@ -169,7 +169,7 @@ class Pets:
         minigame = random.choice(all_minigames)
         await minigame(self.bot, ctx)
 
-    @commands.group()
+    @commands.command(aliases=["shop"])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def store(self, ctx):
         """
