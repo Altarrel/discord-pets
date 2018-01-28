@@ -23,7 +23,7 @@ class InfoCommands:
         """
         help_msg = "```md\n"
 
-        if self.bot.is_owner(ctx.author):
+        if await self.bot.is_owner(ctx.author):
             help_msg += "# Owner\n" \
                 "- load [ext] -> Loads an extension.\n" \
                 "- unload [ext] -> Unloads an extension.\n" \
