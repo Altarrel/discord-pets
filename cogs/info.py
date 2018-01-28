@@ -86,8 +86,7 @@ class InfoCommands:
         """Invite the bot to your server
         """
 
-        await ctx.send(f"{ctx.author} | <https://discordapp.com/api/"
-                       f"oauth2/authorize?client_id={self.bot.user.id}&permissions=0&scope=bot>")
+        await ctx.send(f"{ctx.author} | <https://discordapp.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=19456&scope=bot>")
 
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)

@@ -11,6 +11,10 @@ class ErrorHandler:
     def __init__(self, bot):
         self.bot = bot
 
+    async def print_traceback(self, ctx, error):
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             return
@@ -22,16 +26,16 @@ class ErrorHandler:
             await ctx.send(f"{ctx.author}, you can use that command again in {error.retry_after:.2f} seconds.")
         elif isinstance(error, commands.NotOwner):
             await ctx.send(f"{ctx.author} | You don't have permission to use that command.")
-        elif isinstance(error, discord.Forbidden):
-            if not ctx.channel.permissions_for(ctx.me).embed_links:
-                await ctx.send(f"{ctx.author} | I need permission to embed links.")
+        elif isinstance(error, commands.CommandInvokeError):
+            if isinstance(error.original, discord.Forbidden):
+                if not ctx.channel.permissions_for(ctx.me).embed_links:
+                    await ctx.send(f"{ctx.author} | I need permission to embed links.")
+                else:
+                    self.print_traceback(ctx, error)
             else:
-                print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-                traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+                self.print_traceback(ctx, error)
         else:
-            print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
-
+            self.print_traceback(ctx, error)
 
 def setup(bot):
     bot.add_cog(ErrorHandler(bot))
