@@ -45,6 +45,7 @@ class DiscordPets(commands.Bot):
         self.db = kwargs.pop("db")
         self.blocked = kwargs.pop("blocked")
         self.loop.create_task(self.load_all_extensions())
+        self.loop.create_task(self.post_guild_count())
 
     async def on_message(self, message):
         await self.wait_until_ready()
@@ -61,35 +62,20 @@ class DiscordPets(commands.Bot):
         print(f"Username: {self.user.name}\n"
               f"ID: {self.user.id}\n")
 
+    async def post_guild_count(self):
+        # Post guild count to https://discordbots.org/
         if self.user.id in config.TEST_IDS:
             return
 
-        headers = {'Authorization': config.DBL_TOKEN}
-        data = {'server_count': len(self.guilds)}
-        api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
-        async with aiohttp.ClientSession() as session:
-            await session.post(api_url, data=data, headers=headers)
-        print("Guild count posted to https://discordbots.org/")
-
-    async def on_guild_join(self, guild):
-        if self.user.id in config.TEST_IDS:
-            return
-
-        headers = {'Authorization': config.DBL_TOKEN}
-        data = {'server_count': len(self.guilds)}
-        api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
-        async with aiohttp.ClientSession() as session:
-            await session.post(api_url, data=data, headers=headers)
-
-    async def on_guild_remove(self, guild):
-        if self.user.id in config.TEST_IDS:
-            return
-
-        headers = {'Authorization': config.DBL_TOKEN}
-        data = {'server_count': len(self.guilds)}
-        api_url = 'https://discordbots.org/api/bots/' + str(self.user.id) + '/stats'
-        async with aiohttp.ClientSession() as session:
-            await session.post(api_url, data=data, headers=headers)
+        await self.wait_until_ready()
+        while not self.is_closed():
+            headers = {'Authorization': config.DBL_TOKEN}
+            data = {'server_count': len(self.guilds)}
+            api_url = f"https://discordbots.org/api/bots/{self.user.id}/stats"
+            async with aiohttp.ClientSession() as session:
+                await session.post(api_url, data=data, headers=headers)
+            print(f"Posted guild count to https://discordbots.org/{self.user.id}")
+            await asyncio.sleep(600)
 
     async def load_all_extensions(self):
         await self.wait_until_ready()
