@@ -1,4 +1,6 @@
 [![Discord Bots](https://discordbots.org/api/widget/399237341652320278.svg)](https://discordbots.org/bot/399237341652320278)
+# Archived
+This repository is archived. The bot will still run, but it will no longer be open source. You can still view this source if you'd like, it won't go away.
 # Discord Pets
 Discord Pets is a Discord bot that allows users to take care of a virtual pet.
 # Invite
