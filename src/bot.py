@@ -4,15 +4,18 @@ import sys
 
 import discord
 from discord.ext import commands
+import asyncpg
 
 async def run():
     # Setup db connection here
     bot = DiscordPets()
+    bot.db = await asyncpg.create_pool()
     try:
         await bot.start(config.BOT_TOKEN)
     except KeyboardInterrupt:
         await bot.logout()
         # Close db connection
+        await bot.db.close()
 
 class DiscordPets(commands.Bot):
     def __init__(self, **kwargs):
@@ -27,7 +30,7 @@ class DiscordPets(commands.Bot):
 
     async def load_all_extensions(self):
         await self.wait_until_ready()
-        extensions = ()
+        extensions = ("cog.info",)
         for extension in extensions:
             try:
                 self.load_extension(extension)
