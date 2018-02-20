@@ -1,7 +1,18 @@
 import traceback
+import asyncio
+import sys
 
 import discord
 from discord.ext import commands
+
+async def run():
+    # Setup db connection here
+    bot = DiscordPets()
+    try:
+        await bot.start(config.BOT_TOKEN)
+    except KeyboardInterrupt:
+        await bot.logout()
+        # Close db connection
 
 class DiscordPets(commands.Bot):
     def __init__(self, **kwargs):
@@ -23,3 +34,6 @@ class DiscordPets(commands.Bot):
             except Exception:
                 print(f"Failed to load extension {extension}." file=sys.stderr)
                 traceback.print_exc()
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(run())
