@@ -31,11 +31,11 @@ class ErrorHandler:
                 if not ctx.channel.permissions_for(ctx.me).embed_links:
                     await ctx.send(f"{ctx.author} | I need permission to embed links.")
                 else:
-                    self.print_traceback(ctx, error)
+                    await self.print_traceback(ctx, error)
             else:
-                self.print_traceback(ctx, error)
+                await self.print_traceback(ctx, error)
         else:
-            self.print_traceback(ctx, error)
+            await self.print_traceback(ctx, error)
 
 def setup(bot):
     bot.add_cog(ErrorHandler(bot))
